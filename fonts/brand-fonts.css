@@ -1,0 +1,59 @@
+/* ============================================================
+   Brand Fonts — קורס Claude Desktop (Tal × Omri)
+   הדביקו את הקובץ הזה (או את שורות ה-@import) בראש ה-CSS שלכם.
+   חלופה: השתמשו בתגי <link> מתוך fonts/README.md בתוך <head>.
+   ============================================================ */
+
+/* ---- 1. Google Fonts: Assistant (עברית) + Space Grotesk (לטינית fallback) ---- */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ---- 2. Fontshare: Clash Display (display לטיני ראשי) ----
+   אם Fontshare לא נטען, ה-fallback (Space Grotesk) נכנס אוטומטית. */
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
+
+/* ---- 3. Font Polin (כותרות עברית) ----
+   Polin אינו ב-Google Fonts. אם יש לכם קישור CDN רשמי שלו — הוסיפו @import כאן.
+   ללא Polin, כותרות העברית נופלות אוטומטית ל-Assistant. */
+
+:root {
+  /* ===== טיפוגרפיה ===== */
+  --font-display: "Clash Display", "Space Grotesk", system-ui, sans-serif; /* לטינית: כותרות, מספרים, "Claude Code" */
+  --font-he-head: "Polin", "Assistant", system-ui, sans-serif;            /* כותרות עברית */
+  --font-he-body: "Assistant", "Heebo", system-ui, sans-serif;            /* גוף עברית */
+
+  /* ===== פלטה (dark-first, חם) ===== */
+  --bg:            #0E0D0C;   /* near-black graphite — רקע ראשי */
+  --bg-elev:       #1A1816;   /* כרטיסים / שכבות מוגבהות */
+  --bg-elev-2:     #242019;   /* hover / שכבה שנייה */
+  --line:          #322C26;   /* גבולות עדינים */
+
+  --accent:        #E8633A;   /* coral ראשי — CTA, הדגשות */
+  --accent-soft:   #F0875F;   /* hover בהיר יותר */
+  --accent-deep:   #C24A26;   /* active / לחיצה */
+  --accent-2:      #F2C14E;   /* אקסנט משני — זהוב חם */
+
+  --text:          #F5EFE8;   /* טקסט ראשי על כהה */
+  --text-dim:      #B8AEA3;   /* טקסט משני */
+  --text-faint:    #7C736A;   /* metadata / hints */
+
+  --ok:            #7FB069;
+  --warn:          #F2C14E;
+
+  --shadow-accent: 0 18px 50px -12px rgba(232, 99, 58, 0.35);
+  --shadow-soft:   0 12px 40px -16px rgba(0, 0, 0, 0.6);
+
+  --r-sm: 10px; --r-md: 16px; --r-lg: 26px; --r-pill: 999px;
+}
+
+/* ===== שימוש לדוגמה ===== */
+/*
+html { direction: rtl; }
+body {
+  font-family: var(--font-he-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+h1, h2, h3 { font-family: var(--font-he-head); }
+.latin, code, .num { font-family: var(--font-display); direction: ltr; }
+*/

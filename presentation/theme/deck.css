@@ -1,0 +1,2775 @@
+/* ============================================================================
+   deck.css — סדנת Claude Code & Antigravity
+   Production RTL dark theme for reveal.js 5.1.0 (1280×720, 16:9).
+   Loads after reveal reset.css + reveal.css.
+
+   Two layers, one design language:
+   1. CONTRACT taxonomy — slide--title / divider / outcomes / concept /
+      concept-visual / screenshot / compare / summary / bonuses / closing,
+      plus helpers (kicker, lead, bullets, card, chip, pill, en, mono, shot…).
+   2. Legacy compatibility — classes used by the current index.html draft
+      (s-cover, s-std, s-demo, window-frame, num-list, check-list, tag…),
+      so the live deck never renders unstyled. Same tokens, same look.
+   ========================================================================== */
+
+/* ─── Fonts ────────────────────────────────────────────────────────────────
+   Type files are loaded non-render-blocking via <link rel="preconnect"> +
+   stylesheet tags in index.html <head> (Clash Display + Cabinet Grotesk from
+   Fontshare, Assistant + Space Grotesk from Google Fonts). Keep that the single
+   source of font loading — no @import here (render-blocking, and it duplicated
+   the head links / forced a stray Heebo download).
+
+   Note on Hebrew headings: brand.md asks for "Polin" as the Hebrew display face,
+   but Polin is NOT published on Fontshare (the API returns an empty sheet), so
+   --font-he-head intentionally resolves to Assistant. Hierarchy in Hebrew is
+   carried by weight (800/700) + scale + tight tracking instead. */
+
+/* ─── Design tokens (brand.md, enriched) ───────────────────────────────── */
+:root {
+  /* dark base — warm graphite, slightly deepened for richer contrast */
+  --bg:            #0E0D0C;
+  --bg-deep:       #090807;   /* deepest plate behind the mesh */
+  --bg-elev:       #1A1816;
+  --bg-elev-2:     #242019;
+  --line:          #322C26;
+  --line-strong:   #44392F;
+
+  /* warm accent (coral) — primary brand */
+  --accent:        #E8633A;
+  --accent-soft:   #F0875F;
+  --accent-deep:   #C24A26;
+  --accent-2:      #F2C14E;   /* warm gold — secondary */
+
+  /* cool accents (enrichment beyond brand.md — for chapter identity) */
+  --teal:          #36C5B0;   /* theory — cool cyan-teal */
+  --teal-soft:     #5FE0CC;
+  --violet:        #8B7CF6;   /* deploy — indigo/violet */
+  --violet-soft:   #A99BFF;
+
+  /* text — warm cream, never pure white on hero */
+  --text:          #F7F1EA;
+  --text-dim:      #B8AEA3;
+  --text-faint:    #7C736A;
+
+  /* semantic */
+  --ok:            #82BE6B;
+  --warn:          #F2C14E;
+  --no:            #E0654F;   /* "לא" / before — warm red, not corporate red */
+
+  /* colored shadows (never grey) */
+  --shadow-accent: 0 18px 50px -12px rgba(232, 99, 58, 0.35);
+  --shadow-soft:   0 14px 44px -18px rgba(0, 0, 0, 0.66);
+  --shadow-lift:   0 26px 60px -20px rgba(232, 99, 58, 0.28), 0 10px 30px -18px rgba(0,0,0,.6);
+  --shadow-glass:  0 30px 80px -28px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+
+  /* radii */
+  --r-sm: 10px; --r-md: 16px; --r-lg: 26px; --r-pill: 999px;
+
+  /* fonts — Clash Display (latin display), Cabinet Grotesk (numbers/heavy),
+     Polin→Assistant (hebrew). No Inter/Roboto anywhere. */
+  --font-display:  "Clash Display", "Space Grotesk", system-ui, sans-serif; /* latin / numbers */
+  --font-numeric:  "Cabinet Grotesk", "Clash Display", "Space Grotesk", system-ui, sans-serif; /* big numerals */
+  --font-he-head:  "Polin", "Assistant", system-ui, sans-serif;            /* hebrew headings */
+  --font-he-body:  "Assistant", "Heebo", system-ui, sans-serif;            /* hebrew body */
+  --font-mono:     "Space Grotesk", ui-monospace, "JetBrains Mono", "Fira Code", Menlo, monospace;
+
+  /* slide geometry */
+  --pad-x: clamp(2.5rem, 5vw, 4.5rem);
+  --pad-y: clamp(2rem, 4vh, 3.25rem);
+
+  /* accent surfaces */
+  --accent-wash:   rgba(232, 99, 58, 0.12);
+  --accent-line:   rgba(232, 99, 58, 0.32);
+
+  /* ── per-slide AMBIENT colour (overridden per data-part below) ─────────
+     --amb / --amb-2  = the two mesh light hues for the active chapter.
+     --amb-rgb        = same as --amb in r,g,b for low-opacity washes.
+     Default = coral (opening / fallback). */
+  --amb:       #E8633A;  --amb-rgb:   232, 99, 58;
+  --amb-2:     #F2C14E;  --amb-2-rgb: 242, 193, 78;
+  --amb-glow:  rgba(232, 99, 58, 0.20);
+}
+
+/* ── chapter ambient palettes (set on the slide via data-part) ─────────── */
+[data-part="open"]     { --amb:#E8633A; --amb-rgb:232,99,58;  --amb-2:#F2C14E; --amb-2-rgb:242,193,78; }
+[data-part="theory"]   { --amb:#36C5B0; --amb-rgb:54,197,176; --amb-2:#E8633A; --amb-2-rgb:232,99,58;  }
+[data-part="practice"] { --amb:#F2C14E; --amb-rgb:242,193,78; --amb-2:#E8633A; --amb-2-rgb:232,99,58;  }
+[data-part="deploy"]   { --amb:#8B7CF6; --amb-rgb:139,124,246;--amb-2:#36C5B0; --amb-2-rgb:54,197,176; }
+[data-part="closing"]  { --amb:#E8633A; --amb-rgb:232,99,58;  --amb-2:#F2C14E; --amb-2-rgb:242,193,78; }
+
+/* ============================================================================
+   1 · reveal reset / stage
+   ========================================================================== */
+html, body { background: var(--bg-deep); }
+
+.reveal-viewport,
+.reveal,
+.reveal .slides {
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font-he-body);
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.reveal {
+  font-size: 30px;                 /* base for reveal's r-* scaling at 1280px */
+  font-weight: 400;
+}
+
+.reveal .slides {
+  text-align: right;
+}
+
+/* Each top-level slide is a full 1280×720 stage. Content frames itself. */
+.reveal .slides > section,
+.reveal .slides > section > section {
+  inset: 0;
+  width: 1280px;
+  height: 720px;
+  padding: 0 !important;
+  direction: rtl;
+  text-align: right;
+  overflow: hidden;                /* hard guarantee: nothing escapes the slide */
+}
+
+/* The direct content wrapper of every slide fills the stage and frames padding. */
+.reveal .slides section > div:not(.shot):not(.fragment),
+.reveal .slides section > .slide__inner {
+  box-sizing: border-box;
+}
+
+.reveal .backgrounds { background: var(--bg-deep); }
+
+/* ────────────────────────────────────────────────────────────────────────
+   CINEMATIC BACKGROUND SYSTEM
+   Every full-stage slide paints its own layered, chapter-tinted atmosphere.
+   Layer A (::before): graphite base plate + radial gradient-mesh in the
+   chapter ambient hue (--amb / --amb-2) + soft top-down vignette.
+   Layer B (.slide::after on content slides): fine diagonal weave + grain so
+   the dark never reads "flat". Content sits at z-index ≥ 1 above both.
+   ──────────────────────────────────────────────────────────────────────── */
+.reveal .slides > section.slide::before {
+  content: "";
+  position: absolute;
+  /* oversized so the slow drift never exposes a hard edge inside the stage */
+  inset: -16%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* primary ambient bloom — bottom-trailing corner */
+    radial-gradient(58% 64% at 16% 86%, rgba(var(--amb-rgb), 0.22) 0%, rgba(var(--amb-rgb), 0.05) 38%, transparent 64%),
+    /* secondary ambient bloom — opposite top corner, dimmer */
+    radial-gradient(46% 52% at 90% 8%, rgba(var(--amb-2-rgb), 0.13) 0%, transparent 58%),
+    /* cool depth pool to give the dark a non-grey tint */
+    radial-gradient(70% 90% at 80% 100%, rgba(var(--amb-rgb), 0.06) 0%, transparent 60%),
+    /* base graphite plate, faintly graded so it isn't a flat fill */
+    linear-gradient(155deg, #15110E 0%, var(--bg) 42%, var(--bg-deep) 100%);
+  /* living ambient: the bloom field drifts + breathes very slowly (GPU only) */
+  will-change: transform;
+  transform: translateZ(0);
+  animation: ambientDrift 34s ease-in-out infinite;
+}
+
+/* texture + vignette layer (kept off hero/divider/closing, which paint their
+   own richer mesh via their dedicated ::before below) */
+.reveal .slides > section.slide::after {
+  content: "";
+  position: absolute;
+  /* oversized so the drifting sweep can travel without exposing an edge */
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.9;
+  background:
+    /* a faint travelling light-streak in the chapter hue */
+    linear-gradient(108deg, transparent 38%, rgba(var(--amb-rgb), 0.05) 49%, rgba(var(--amb-2-rgb), 0.035) 51%, transparent 62%),
+    /* hairline diagonal weave */
+    repeating-linear-gradient(48deg, transparent 0 22px, rgba(255,255,255,0.010) 22px 23px),
+    /* corner vignette for cinematic falloff */
+    radial-gradient(120% 120% at 50% 38%, transparent 55%, rgba(0,0,0,0.42) 100%);
+  will-change: transform;
+  transform: translateZ(0);
+  /* slow light-sweep travelling across, then easing back — never flickers */
+  animation: ambientSweep 26s ease-in-out infinite;
+}
+
+/* keep all slide content above the two background layers — but NOT the elements
+   that are deliberately absolutely-positioned (the corner state badge and the
+   divider motif). This rule was silently forcing them to position:relative,
+   which is why the badge drifted to the RTL top-right and the build motif sat
+   in flow. Excluding them lets their own `position:absolute` stand. */
+.reveal .slides > section.slide > *:not(.slide__badge):not(.divider-motif):not(.tip):not(.slide-art) { position: relative; z-index: 1; }
+
+/* ── ambient motion keyframes — only transform/opacity, GPU-friendly ─────────
+   The bloom field drifts on a slow loop and the light-streak sweeps across.
+   Amplitudes are small (a few %) so type never sits on a moving hotspot;
+   the layers are oversized (inset negatives above) so no edge is ever exposed.
+   All of this is disabled under prefers-reduced-motion (see §8). */
+@keyframes ambientDrift {
+  0%   { transform: translate3d(0, 0, 0)        scale(1.04) rotate(0deg); }
+  25%  { transform: translate3d(2.5%, -1.5%, 0) scale(1.07) rotate(1.1deg); }
+  50%  { transform: translate3d(-1.5%, 2%, 0)   scale(1.05) rotate(-0.8deg); }
+  75%  { transform: translate3d(-2.5%, -1%, 0)  scale(1.08) rotate(0.6deg); }
+  100% { transform: translate3d(0, 0, 0)        scale(1.04) rotate(0deg); }
+}
+@keyframes ambientSweep {
+  0%   { transform: translate3d(-12%, 0, 0); }
+  50%  { transform: translate3d(12%, 0, 0); }
+  100% { transform: translate3d(-12%, 0, 0); }
+}
+
+/* ============================================================================
+   2 · typography base
+   ========================================================================== */
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+  font-family: var(--font-he-head);
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  margin: 0 0 0.4em;
+  font-weight: 800;
+  text-shadow: none;
+  text-wrap: balance;
+}
+
+.reveal h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.04; }
+.reveal h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); line-height: 1.08; }
+.reveal h3 { font-size: clamp(1.15rem, 2vw, 1.55rem); font-weight: 700; }
+.reveal h4 { font-size: 1.05rem; font-weight: 700; }
+
+.reveal p, .reveal li {
+  font-family: var(--font-he-body);
+  color: var(--text);
+  font-size: 1.05rem;
+  line-height: 1.62;
+  text-shadow: none;
+  text-wrap: pretty;
+}
+
+.reveal p { max-width: 64ch; }
+
+.reveal strong, .reveal b { font-weight: 700; color: var(--text); }
+.reveal em { font-style: normal; color: var(--accent-soft); }
+
+.reveal ul, .reveal ol {
+  display: block;
+  text-align: right;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Links */
+.reveal a {
+  color: var(--accent-soft);
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 135, 95, 0.4);
+  text-underline-offset: 3px;
+  transition: color .18s ease;
+}
+.reveal a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+/* Selection */
+.reveal ::selection { background: rgba(232, 99, 58, 0.32); color: #fff; }
+
+/* ─── Latin / numbers / code in Hebrew flow ───────────────────────────── */
+.en {
+  font-family: var(--font-display);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-feature-settings: "ss01" 1, "kern" 1, "liga" 1;
+  letter-spacing: -0.012em;
+  font-weight: 600;
+}
+/* Latin set inside a big Hebrew heading rides the heading's weight/scale, not a
+   competing 600 body weight — keeps "Claude Code" monumental, not chunky. */
+.reveal h1 .en, .reveal h2 .en,
+.deck-title .en, .divider__title .en, .thanks__title .en {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+/* standalone numerals/figures: tabular + slashed zero so columns of digits and
+   times ("10:00", "37") line up and never wobble */
+.num, .big-stat, .break__time, .divider__num,
+.slide-number, .q-list li::before {
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* inline + block mono "terminal" motif */
+.mono, code.mono, .reveal code, .reveal pre code {
+  font-family: var(--font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+.reveal code:not(.mono):not(pre code) {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 0.08em 0.42em;
+  font-size: 0.9em;
+  color: var(--accent-soft);
+}
+
+/* block terminal */
+.reveal pre,
+pre.mono {
+  display: block;
+  width: 100%;
+  margin: 0.6rem 0 0;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0.95rem 1.15rem 0.95rem 1.15rem;
+  box-shadow: var(--shadow-soft);
+  direction: ltr;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+/* terminal top hairline accent */
+.reveal pre::before,
+pre.mono::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent-2) 70%, transparent);
+  opacity: 0.55;
+}
+
+.reveal pre code,
+pre.mono code,
+pre.mono {
+  color: var(--text);
+  font-size: 0.74rem;
+  line-height: 1.62;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  padding: 0;
+}
+
+/* prompt marker + blinking caret for single-line .mono prompts */
+.mono.prompt::before,
+.prompt-line::before {
+  content: "› ";
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1.05em;
+  background: var(--accent);
+  vertical-align: -0.12em;
+  border-radius: 2px;
+  margin-inline-start: 3px;
+  animation: caretBlink 1.1s steps(1) infinite;
+}
+@keyframes caretBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ─── Shared inline atoms ──────────────────────────────────────────────── */
+.kicker, .eyebrow, .section-label {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amb);
+  margin: 0 0 0.9rem;
+}
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 1.7rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--amb), transparent);
+  margin-inline-end: 0.6rem;
+  border-radius: 2px;
+}
+
+.lead {
+  font-size: 1.28rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  max-width: 58ch;
+  margin: 0 0 1.2rem;
+  font-weight: 500;
+}
+
+.accent { color: var(--accent); font-weight: 700; }
+.hi     { color: var(--accent); font-weight: 700; }      /* legacy alias */
+.hi-gold,
+.accent--gold { color: var(--accent-2); font-weight: 700; }
+.hi-green { color: var(--ok); font-weight: 700; }
+.line-accent { color: var(--accent); }                   /* legacy */
+
+/* Gradient keyword treatment inside HEADINGS only (warm coral→gold sweep).
+   Body-text .accent stays solid for legibility; headings get the sheen. */
+.reveal h1 .accent, .reveal h2 .accent, .reveal h3 .accent,
+.reveal h1 .line-accent, .reveal h2 .line-accent,
+.deck-title .accent, .divider__title .accent {
+  background: linear-gradient(96deg, var(--accent) 0%, var(--accent-soft) 42%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: 800;
+}
+
+/* chip = solid pill label; pill = subtle outline tag */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  background: linear-gradient(180deg, rgba(40,35,30,0.7), rgba(22,20,17,0.6));
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--r-pill);
+  padding: 0.42em 1.1em;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.chip::before {
+  content: "";
+  width: 0.5em; height: 0.5em; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(232,99,58,0.7);
+  flex: 0 0 auto;
+}
+
+.pill, .tag {
+  display: inline-block;
+  background: var(--accent-wash);
+  color: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-pill);
+  padding: 0.26em 0.95em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.85rem;
+}
+.pill--gold, .tag.yellow {
+  background: rgba(242,193,78,0.12);
+  color: var(--accent-2);
+  border-color: rgba(242,193,78,0.32);
+}
+.pill--green, .tag.green {
+  background: rgba(127,176,105,0.12);
+  color: var(--ok);
+  border-color: rgba(127,176,105,0.32);
+}
+.pill--demo, .tag.demo {
+  background: rgba(232,99,58,0.14);
+  color: var(--accent-soft);
+  border-color: var(--accent-line);
+}
+
+/* small accent rule */
+.brand-rule, .accent-line, .divider {
+  display: block;
+  width: 3.4rem;
+  height: 3px;
+  background: var(--accent);
+  border-radius: var(--r-pill);
+  margin: 0 0 1.1rem auto;
+  border: 0;
+}
+.divider { width: 100%; height: 1px; background: var(--line); margin: 0.9rem 0; }
+
+/* ============================================================================
+   3 · bullets
+   ========================================================================== */
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0.4rem 0 0;
+}
+.bullets li {
+  position: relative;
+  padding-inline-start: 1.5rem;
+  font-size: 1.06rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.bullets li::before {
+  content: "›";
+  position: absolute;
+  inset-inline-start: 0;
+  top: -0.04em;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.bullets--lg li { font-size: 1.32rem; line-height: 1.45; padding-inline-start: 1.8rem; }
+.bullets--lg li::before { font-size: 1.1em; }
+.bullets li .accent,
+.bullets li .hi { color: var(--accent); }
+
+/* legacy num-list (ordered, accent disc) */
+.num-list { display:flex; flex-direction:column; gap:0.6rem; }
+.num-list li { display:flex; align-items:flex-start; gap:0.7rem; font-size:1.02rem; line-height:1.4; }
+.num-list .num {
+  order: 1; margin-inline-start: auto;
+  display:flex; align-items:center; justify-content:center;
+  width:1.7em; height:1.7em; min-width:1.7em;
+  background: var(--accent-wash); color: var(--accent);
+  border:1px solid var(--accent-line);
+  border-radius:50%; font-weight:700; font-size:0.82em;
+  font-family: var(--font-display);
+}
+.num-list li > span:not(.num) { order:0; flex:1; }
+
+/* legacy check-list */
+.check-list { display:flex; flex-direction:column; gap:0.5rem; }
+.check-list li { display:flex; align-items:flex-start; gap:0.6rem; font-size:1.02rem; line-height:1.4; }
+.check-list .check { order:1; margin-inline-start:auto; color:var(--ok); font-weight:700; }
+.check-list li > span:not(.check) { order:0; flex:1; }
+
+/* ============================================================================
+   4 · cards + grids
+   ========================================================================== */
+.card {
+  background:
+    radial-gradient(120% 80% at 88% 0%, rgba(var(--amb-rgb),0.10), transparent 56%),
+    linear-gradient(180deg, rgba(var(--amb-rgb),0.055), transparent 58%),
+    linear-gradient(168deg, rgba(42,37,31,0.78), rgba(20,18,16,0.66));
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-lg);
+  padding: 1.4rem 1.55rem;
+  box-shadow:
+    var(--shadow-soft),
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    inset 0 0 0 1px rgba(255,255,255,0.012);
+  position: relative;
+  transition: transform .24s cubic-bezier(.2,.7,.2,1), border-color .24s ease, box-shadow .24s ease;
+  overflow: hidden;
+}
+/* top inner sheen — a crisp hairline catch-light along the top edge that fades */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 56%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.018) 18%, transparent 100%);
+  pointer-events: none;
+  opacity: 0.85;
+}
+/* leading accent bar (ambient-tinted), revealed on hover */
+.card::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0; top: 0;
+  width: 3px; height: 100%;
+  background: linear-gradient(180deg, var(--amb), transparent 72%);
+  opacity: 0;
+  transition: opacity .24s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(var(--amb-rgb), 0.5);
+  box-shadow:
+    0 28px 64px -22px rgba(0,0,0,0.7),
+    0 0 38px -10px rgba(var(--amb-rgb), 0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.card:hover::before { opacity: 1; }
+
+.card h3, .card h4 {
+  font-size: 1.06rem;
+  margin: 0 0 0.35em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.card p {
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  margin: 0;
+  line-height: 1.5;
+  max-width: none;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+.card-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid--4 { grid-template-columns: repeat(2, 1fr); }
+.card-grid--bonus { grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
+
+/* numbered ribbon on bonus cards */
+.card-grid--bonus .card { padding-top: 1.5rem; }
+
+/* ============================================================================
+   5 · SLIDE TYPES (CONTRACT)
+   Generic frame: every slide-type centers a padded content column.
+   ========================================================================== */
+.reveal .slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: var(--pad-y) var(--pad-x);
+  position: relative;
+}
+/* reveal.js writes an INLINE `display:block` on the active `.present` slide,
+   which beat the flex above (inline > stylesheet) — so justify-content centering
+   silently died and every slide collapsed to the top. `!important` reclaims flex
+   on the visible slide. Scope to `.present` only: far slides get inline
+   `display:none`, and a broader override would un-hide them. */
+.reveal .slides > section.slide.present {
+  display: flex !important;
+}
+
+/* section heading used across content slides */
+.slide__h, .slide h2.slide__h {
+  margin: 0 0 1rem;
+  letter-spacing: -0.022em;
+  text-shadow: 0 1px 18px rgba(0,0,0,0.4);
+}
+
+/* richer cinematic mesh for hero / divider / closing — overrides the generic
+   .slide::before with a more dramatic, multi-bloom ambient field. */
+.reveal .slides > section.slide--title::before,
+.reveal .slides > section.slide--divider::before,
+.reveal .slides > section.slide--closing::before {
+  background:
+    radial-gradient(50% 60% at 12% 88%, rgba(var(--amb-rgb), 0.34) 0%, rgba(var(--amb-rgb), 0.08) 40%, transparent 66%),
+    radial-gradient(40% 46% at 88% 6%, rgba(var(--amb-2-rgb), 0.20) 0%, transparent 58%),
+    radial-gradient(80% 100% at 100% 100%, rgba(var(--amb-rgb), 0.10) 0%, transparent 60%),
+    conic-gradient(from 220deg at 24% 78%, rgba(var(--amb-rgb), 0.10), transparent 30%, transparent 70%, rgba(var(--amb-2-rgb), 0.07)),
+    linear-gradient(150deg, #1A140F 0%, var(--bg) 46%, var(--bg-deep) 100%);
+  /* the dramatic mesh breathes + slowly spins its conic field — most alive
+     of all slides; slow conic rotation reads as a living light field */
+  animation: ambientMesh 30s ease-in-out infinite;
+}
+/* a soft drifting light-streak across hero/divider/closing for depth */
+.reveal .slides > section.slide--title::after,
+.reveal .slides > section.slide--divider::after,
+.reveal .slides > section.slide--closing::after {
+  opacity: 1;
+  background:
+    linear-gradient(105deg, transparent 40%, rgba(var(--amb-rgb), 0.05) 50%, transparent 60%),
+    radial-gradient(130% 120% at 30% 30%, transparent 52%, rgba(0,0,0,0.46) 100%);
+  /* a wider, slower light-sweep travels across the hero for cinematic drama */
+  animation: ambientSweep 22s ease-in-out infinite;
+}
+@keyframes ambientMesh {
+  0%   { transform: translate3d(0, 0, 0)        scale(1.05) rotate(0deg); }
+  33%  { transform: translate3d(3%, 1.5%, 0)    scale(1.09) rotate(2deg); }
+  66%  { transform: translate3d(-2%, -2%, 0)    scale(1.07) rotate(-1.4deg); }
+  100% { transform: translate3d(0, 0, 0)        scale(1.05) rotate(0deg); }
+}
+.slide--title > *,
+.slide--divider > *,
+.slide--closing > * { position: relative; z-index: 1; }
+
+/* ─── 5.1 title / cover ────────────────────────────────────────────────── */
+/* RTL column flex: cross-start = right, so flex-start aligns the wrap to the right. */
+.slide--title { align-items: flex-start; text-align: right; }
+.slide--title .title__wrap { max-width: 74%; }
+.slide--title .brand-mark {
+  height: 50px;
+  width: auto;
+  margin: 0 0 1.5rem;
+  display: block;
+  filter: drop-shadow(0 8px 24px rgba(232,99,58,0.42));
+}
+.slide--title .deck-title,
+.slide--title h1 {
+  font-size: clamp(2.9rem, 6.6vw, 4.8rem);
+  line-height: 1.0;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+}
+/* keyword sheen on the hero title already inherited; ensure weight */
+.slide--title .deck-title .accent,
+.slide--title h1 .line-accent { font-weight: 800; }
+.slide--title .lead { margin-inline-start: 0; }
+.slide--title .meta {
+  display: flex; gap: 0.7rem; flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-block-start: 1.7rem;
+}
+
+/* ─── 5.2 divider / chapter break ──────────────────────────────────────── */
+.slide--divider { align-items: flex-start; justify-content: center; text-align: right; padding-inline-end: clamp(3rem, 6vw, 5.5rem); }
+.slide--divider .divider__wrap {
+  max-width: 56%;
+  position: relative;
+  z-index: 1;
+  padding-inline-end: 0.4rem;
+}
+
+/* The giant chapter numeral: oversized Cabinet Grotesk on the left, built as a
+   layered element — a faint gradient ghost fill + a crisp gradient stroke +
+   an ambient glow halo. Reads as a designed monument, not a thin outline. */
+.slide--divider .divider__num {
+  font-family: var(--font-numeric);
+  font-size: clamp(12rem, 27vw, 25rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  position: absolute;
+  /* ghost backdrop offset to overlap the title; nudged off the right wall */
+  inset-inline-end: clamp(6rem, 11vw, 11rem);
+  top: 50%;
+  transform: translateY(-52%);
+  z-index: 0;
+  /* gradient ghost fill — kept faint so the title reads crisply on top */
+  background: linear-gradient(160deg, rgba(var(--amb-rgb),0.18) 0%, rgba(var(--amb-2-rgb),0.07) 55%, transparent 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* soft glowing stroke (ghost outline, not a hard competing line) */
+  -webkit-text-stroke: 1.5px rgba(var(--amb-rgb), 0.38);
+  filter: drop-shadow(0 0 44px rgba(var(--amb-rgb), 0.28));
+}
+/* thin accent rule + dotted chapter tally beside the numeral */
+.slide--divider .divider__num::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0.06em;
+  bottom: 0.14em;
+  width: 1.3em;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amb), transparent);
+  border-radius: 4px;
+}
+
+.slide--divider .divider__title,
+.slide--divider h2 {
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  line-height: 1.0;
+  margin: 0;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 10px rgba(9,8,7,0.9), 0 4px 40px rgba(9,8,7,0.85);
+}
+/* chapter kicker on dividers uses the ambient hue, not just coral */
+.slide--divider .kicker { margin-bottom: 0.7rem; color: var(--amb); }
+.slide--divider .kicker::before { background: var(--amb); }
+/* a slim vertical "chapter spine" anchoring the title block on its right edge
+   (RTL: inline-start = right) */
+.slide--divider .divider__wrap::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -1.3rem;
+  top: 0.15em;
+  width: 4px;
+  height: calc(100% - 0.3em);
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--amb), transparent 88%);
+  box-shadow: 0 0 18px rgba(var(--amb-rgb), 0.5);
+}
+
+/* legacy break slide */
+.s-break .section-num {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 12vw, 10rem);
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--accent-line);
+  line-height: 1;
+  position: absolute;
+  inset-inline-start: 2rem; top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ─── 5.3 outcomes / examples ──────────────────────────────────────────── */
+.slide--outcomes { justify-content: center; }
+.slide--outcomes .slide__h, .slide--outcomes h2 { margin-bottom: 1.2rem; }
+.slide--outcomes .card-grid { grid-template-columns: repeat(3, 1fr); }
+
+/* ─── 5.4 concept (text) ───────────────────────────────────────────────── */
+.slide--concept { justify-content: center; }
+.slide--concept .concept { max-width: 100%; }
+.slide--concept .concept__body { max-width: 70ch; }
+.slide--concept .lead { margin-bottom: 1rem; }
+
+/* ─── 5.5 concept-visual (split: text | diagram, RTL) ──────────────────── */
+.slide--concept-visual { justify-content: center; }
+.concept--split {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;   /* text | visual */
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  width: 100%;
+}
+.concept--split .concept__body { min-width: 0; }
+.concept__visual {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.6rem 1.7rem;
+  background:
+    radial-gradient(75% 80% at 50% 30%, rgba(var(--amb-rgb),0.12), transparent 72%),
+    linear-gradient(165deg, rgba(36,32,25,0.78), rgba(18,16,14,0.7));
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-lg);
+  box-shadow:
+    var(--shadow-glass),
+    0 0 50px -18px rgba(var(--amb-rgb), 0.30);
+  position: relative;
+  overflow: hidden;
+}
+/* glowing top hairline on the visual panel */
+.concept__visual::before {
+  content: "";
+  position: absolute;
+  inset-inline: 12%;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(var(--amb-rgb),0.7), transparent);
+}
+.concept__visual::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.concept__visual img,
+.concept__visual svg {
+  width: 100%;
+  height: auto;
+  max-height: 430px;
+  display: block;
+  filter: drop-shadow(0 8px 26px rgba(0,0,0,0.5));
+}
+
+/* legacy split layout (s-demo grid handled in index inline style; we still
+   style its children + provide fallback grid if inline style is removed) */
+.s-demo, .slide--split {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 2rem;
+  align-items: center;
+}
+.s-demo .demo-text, .demo-text { text-align: right; min-width: 0; }
+
+/* ─── 5.6 screenshot (window chrome + capture area + caption) ───────────── */
+.slide--screenshot { justify-content: center; }
+.slide--screenshot .slide__h, .slide--screenshot h2 { margin-bottom: 0.9rem; }
+
+.shot, .window-frame {
+  background: var(--bg-elev-2);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow:
+    0 40px 90px -34px rgba(0,0,0,0.8),
+    0 0 60px -22px rgba(var(--amb-rgb), 0.32),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+.shot { display: flex; flex-direction: column; }
+
+/* window chrome bar with the 3 traffic dots */
+.shot__chrome, .window-titlebar {
+  background: linear-gradient(180deg, var(--bg-elev), var(--bg-elev-2));
+  border-bottom: 1px solid var(--line);
+  padding: 0.62rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  direction: ltr;
+}
+/* CONTRACT shot__chrome uses bare <span> dots */
+.shot__chrome span {
+  width: 11px; height: 11px; border-radius: 50%;
+  flex: 0 0 auto;
+  display: inline-block;
+}
+.shot__chrome span:nth-child(1) { background: #FF5F57; }
+.shot__chrome span:nth-child(2) { background: #FEBC2E; }
+.shot__chrome span:nth-child(3) { background: #28C840; }
+.shot__chrome::after {
+  content: "";
+  flex: 1;
+  height: 18px;
+  margin-inline-start: 0.75rem;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  opacity: 0.7;
+}
+
+/* legacy explicit dots */
+.dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.dot-red { background:#FF5F57; } .dot-yellow { background:#FEBC2E; } .dot-green { background:#28C840; }
+
+/* capture body */
+.shot__body, .window-body, .screenshot-placeholder {
+  position: relative;
+  width: 100%;
+}
+.shot__body, .window-body {
+  min-height: 300px;
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-align: center;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 14px, rgba(255,255,255,0.012) 14px 15px),
+    var(--bg);
+}
+
+/* placeholder text inside capture area */
+.shot__ph, .screenshot-label {
+  color: var(--text-faint);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  font-family: var(--font-he-body);
+  direction: rtl;
+  max-width: 40ch;
+}
+.shot__ph::before {
+  content: "🔴";
+  display: block;
+  font-size: 1.15rem;
+  margin-bottom: 0.35rem;
+  filter: saturate(1.2);
+}
+
+/* caption — a machined status-bar at the window's base. Must stay display:block:
+   flex split the mixed Hebrew/Latin inline nodes into separate flex items,
+   which orphaned punctuation, ate the spaces and killed line-wrapping. */
+.shot__cap {
+  display: block;
+  /* size containment: the caption's text doesn't inflate the fit-content
+     figure (the capture image sets the window width); the caption then
+     stretches to that width and wraps inside it */
+  contain: inline-size;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.8rem 1.2rem 0.9rem;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(26,24,22,0.85), rgba(18,16,14,0.92));
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  text-align: right;
+}
+.shot__cap::before {
+  content: "";
+  display: inline-block;
+  width: 0.62rem; height: 0.62rem;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 2px rgba(232,99,58,0.22);
+  margin-inline-end: 0.55rem;
+  vertical-align: -0.02em;
+}
+
+/* embedded real screenshots (circle is baked into the PNG) */
+.slide--screenshot .shot { max-width: 880px; margin-inline: auto; }
+.shot__body--img { padding: 0; min-height: 0; background: none; display: block; }
+.shot__img { display: block; width: 100%; height: auto; }
+
+/* red annotation circle helper (legacy + reusable) */
+.red-circle {
+  position: absolute;
+  border: 3px solid #FF3B30;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255,59,48,0.3), 0 0 14px rgba(255,59,48,0.4);
+  pointer-events: none;
+}
+
+/* ─── 5.7 compare (two columns: no / yes) ──────────────────────────────── */
+.slide--compare { justify-content: center; }
+.slide--compare .slide__h, .slide--compare h2 { margin-bottom: 1.1rem; }
+
+.compare, .before-after {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+  width: 100%;
+  align-items: stretch;
+}
+.compare__col, .ba-col {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 1.3rem 1.45rem;
+  position: relative;
+  overflow: hidden;
+}
+.compare__col h3 {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin: 0 0 0.9rem;
+  font-size: 1.18rem;
+}
+.compare__col h3::before {
+  font-family: var(--font-display);
+  font-weight: 700;
+  width: 1.5em; height: 1.5em;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-size: 0.85em;
+}
+.compare__col .bullets li::before { content: ""; } /* override default chevron, set per-col below */
+
+/* "לא" column — warm red */
+.compare--no, .ba-col.bad {
+  border-color: rgba(224,101,79,0.4);
+  background: linear-gradient(180deg, rgba(224,101,79,0.06), var(--bg-elev));
+}
+.compare--no h3 { color: var(--no); }
+.compare--no h3::before { content: "✕"; background: rgba(224,101,79,0.16); color: var(--no); }
+.compare--no .bullets li { padding-inline-start: 1.55rem; }
+.compare--no .bullets li::before {
+  content: "✕"; color: var(--no); font-family: var(--font-he-body); font-weight: 700; font-size: 0.85em; top: 0.06em;
+}
+
+/* "כן" column — coral / green ok */
+.compare--yes, .ba-col.good {
+  border-color: rgba(127,176,105,0.45);
+  background: linear-gradient(180deg, rgba(127,176,105,0.07), var(--bg-elev));
+  box-shadow: 0 0 30px -10px rgba(127,176,105,0.16);
+}
+.compare--yes h3 { color: var(--ok); }
+.compare--yes h3::before { content: "✓"; background: rgba(127,176,105,0.16); color: var(--ok); }
+.compare--yes .bullets li { padding-inline-start: 1.55rem; }
+.compare--yes .bullets li::before {
+  content: "✓"; color: var(--ok); font-family: var(--font-he-body); font-weight: 700; font-size: 0.9em; top: 0.04em;
+}
+
+/* legacy ba-label */
+.ba-label { font-size:0.76rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-block-end:0.6rem; }
+.ba-col.bad .ba-label { color: var(--no); }
+.ba-col.good .ba-label { color: var(--ok); }
+.ba-col p { font-size:0.9rem; color:var(--text-dim); margin:0; line-height:1.5; max-width:none; }
+
+/* ─── 5.8 summary ──────────────────────────────────────────────────────── */
+.slide--summary { justify-content: center; }
+.slide--summary .slide__h, .slide--summary h2 { margin-bottom: 1.2rem; }
+.slide--summary .bullets--lg { max-width: 80%; }
+
+/* ─── 5.9 bonuses ──────────────────────────────────────────────────────── */
+.slide--bonuses { justify-content: center; }
+.slide--bonuses .slide__h, .slide--bonuses h2 { margin-bottom: 1.1rem; }
+.slide--bonuses .card h3 { color: var(--accent-2); }
+
+/* ─── 5.10 closing ─────────────────────────────────────────────────────── */
+.slide--closing { justify-content: center; align-items: flex-start; text-align: right; }
+.slide--closing .closing { max-width: 84%; }
+.slide--closing .deck-title,
+.slide--closing h2 {
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  margin: 0 0 1.3rem;
+}
+.q-list {
+  counter-reset: q;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+}
+.q-list li {
+  position: relative;
+  padding-inline-start: 2.5rem;
+  font-size: 1.08rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+  counter-increment: q;
+}
+.q-list li::before {
+  content: counter(q);
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  width: 1.7rem; height: 1.7rem;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+}
+
+/* ============================================================================
+   6 · legacy layout wrappers (current index.html draft)
+   These get overridden by index.html's own <style> where it is more specific;
+   kept here so the deck is fully styled even if that block is removed.
+   ========================================================================== */
+.s-cover {
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
+  height: 100%; padding: var(--pad-y) var(--pad-x); text-align: right;
+  position: relative;
+}
+.s-cover .eyebrow { color: var(--accent); }
+.s-cover h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1.04; margin-block-end: 0.5rem; }
+.s-cover .subtitle { color: var(--text-dim); font-size: clamp(1.05rem,2vw,1.32rem); margin-block-end: 1.8rem; }
+.s-cover .meta { display:flex; gap:0.8rem; flex-wrap:wrap; justify-content:flex-end; }
+
+.s-std { display:flex; flex-direction:column; justify-content:center; height:100%; padding: var(--pad-y) var(--pad-x); text-align:right; }
+.s-ba  { display:flex; flex-direction:column; justify-content:center; height:100%; padding: var(--pad-y) var(--pad-x); }
+.s-break { display:flex; flex-direction:column; justify-content:center; align-items:flex-end; height:100%; padding: var(--pad-y) var(--pad-x); text-align:right; position:relative; }
+
+/* presenters / meta chips (legacy) */
+.presenters { display:flex; gap:0.7rem; margin-block-start:1.4rem; justify-content:flex-end; }
+.presenter-chip, .meta-chip {
+  background: var(--bg-elev); border:1px solid var(--line-strong);
+  border-radius: var(--r-pill); padding:0.36em 1.05em;
+  font-size:0.92rem; font-weight:600; color:var(--text-dim);
+}
+
+/* legacy agent-loop (CONTRACT diagrams replace this via SVG, but keep styled) */
+.agent-loop { display:flex; align-items:center; justify-content:center; gap:0.45rem; flex-wrap:wrap; margin:1.3rem 0; direction:ltr; }
+.agent-step {
+  background: var(--bg-elev); border:1px solid var(--line);
+  border-radius: var(--r-sm); padding:0.5em 1em;
+  font-family: var(--font-display); font-size:0.9rem; font-weight:600; color:var(--text-dim);
+  transition: color .2s, border-color .2s, box-shadow .2s;
+}
+.agent-step.active { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px rgba(232,99,58,0.22); }
+.agent-arrow { color: var(--text-faint); font-family: var(--font-display); }
+
+/* legacy prompt-box */
+.prompt-box {
+  background: var(--bg-elev); border:1px solid var(--line); border-radius: var(--r-md);
+  padding:0.95rem 1.2rem; font-family: var(--font-mono); font-size:0.82rem;
+  color: var(--text-dim); direction:ltr; text-align:left; box-shadow: var(--shadow-soft); position:relative;
+}
+.prompt-box .prompt-line::before { content:"› "; color:var(--accent); font-weight:700; }
+
+/* legacy two-col list */
+.two-col-list { display:grid; grid-template-columns:1fr 1fr; gap:0.4rem 2rem; width:100%; margin:0; padding:0; list-style:none; }
+.two-col-list li { display:flex; align-items:center; gap:0.5rem; font-size:0.96rem; }
+.two-col-list li::before { content:"›"; color:var(--accent); font-weight:700; order:1; margin-inline-start:auto; }
+.two-col-list li span { order:0; }
+
+.big-stat { font-family: var(--font-display); font-size: clamp(3rem,8vw,6rem); font-weight:700; color: var(--accent); line-height:1; letter-spacing:-0.03em; direction:ltr; }
+
+/* ============================================================================
+   7 · reveal chrome (progress / controls / slide-number / overview)
+   ========================================================================== */
+.reveal .progress { background: rgba(50,44,38,0.45); height: 3px; color: var(--accent); }
+.reveal .progress span {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--teal));
+  box-shadow: 0 0 14px rgba(232,99,58,0.5);
+}
+
+.reveal .controls { color: var(--accent); }
+.reveal .controls button { color: var(--accent); }
+.reveal .controls .navigate-left.enabled:hover,
+.reveal .controls .navigate-right.enabled:hover,
+.reveal .controls .navigate-up.enabled:hover,
+.reveal .controls .navigate-down.enabled:hover { color: var(--accent-soft); }
+
+/* premium slide number — "07 / 34" pill, lower-left, ambient-tinted hairline */
+.reveal .slide-number {
+  direction: ltr;
+  unicode-bidi: isolate;
+  inset-inline-end: auto;
+  inset-inline-start: 1.4rem;
+  bottom: 1.15rem;
+  right: auto;
+  left: 1.4rem;
+  background: rgba(20,18,16,0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-pill);
+  padding: 0.34em 0.85em;
+  color: var(--text-dim);
+  font-family: var(--font-numeric);
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.7);
+}
+.reveal .slide-number a { color: inherit; text-decoration: none; }
+/* colour just the current index in the brand accent (slide-number lives
+   outside the active section, so it can't read --amb — use the coral anchor) */
+.reveal .slide-number .slide-number-a {
+  color: var(--accent-soft);
+  text-shadow: 0 0 12px rgba(232, 99, 58, 0.45);
+}
+.reveal .slide-number .slide-number-delimiter { opacity: 0.5; margin: 0 0.18em; font-weight: 500; }
+
+/* overview mode: keep slides legible (frosted tiles, readable scale) */
+.reveal.overview .slides section {
+  outline-color: var(--line) !important;
+}
+.reveal.overview .slides section.present {
+  outline-color: var(--accent) !important;
+}
+
+/* ─── speaker / print: ensure dark + readable notes ────────────────────── */
+@media print {
+  html, body, .reveal, .reveal .slides { background: var(--bg) !important; }
+}
+
+/* reveal speaker view iframes inherit the same theme automatically since it
+   loads deck.css; nothing extra needed. Notes are hidden in the deck: */
+.reveal aside.notes,
+.reveal .notes { display: none; }
+
+/* ============================================================================
+   8 · fragments + motion (tasteful)
+   ========================================================================== */
+.reveal .slides section .fragment.fade-up,
+.reveal .slides section .fragment.fade-in-then-out,
+.reveal .slides section .card.fragment {
+  transition: opacity .4s ease, transform .4s cubic-bezier(.2,.7,.2,1);
+}
+.reveal .fragment.fade-up { transform: translateY(14px); }
+.reveal .fragment.fade-up.visible { transform: translateY(0); }
+
+/* default reveal slide transition smoothing */
+.reveal .slides section { transition-timing-function: cubic-bezier(.2,.7,.2,1); }
+
+/* ────────────────────────────────────────────────────────────────────────
+   ENTRANCE CHOREOGRAPHY (on slide arrival)
+   reveal.js stamps the active slide with `.present`. We replay a soft,
+   staggered entrance for that slide's content every time it lands — a short
+   fade + lift + de-blur, sequenced so the eye reads top-to-bottom. This is a
+   separate layer from reveal's own slide transition (we only touch inner
+   elements, never the <section> transform), so keyboard nav stays intact.
+   ──────────────────────────────────────────────────────────────────────── */
+@keyframes elemEnter {
+  from { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+@keyframes elemEnterUp {
+  from { opacity: 0; transform: translateY(26px) scale(.985); filter: blur(8px); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0); }
+}
+
+/* generic content slides: badge → heading → body bits, lightly staggered */
+.reveal .slides > section.slide.present > .slide__badge,
+.reveal .slides > section.slide.present > .kicker,
+.reveal .slides > section.slide.present > .slide__h,
+.reveal .slides > section.slide.present > h2,
+.reveal .slides > section.slide.present > .lead,
+.reveal .slides > section.slide.present > .card-grid,
+.reveal .slides > section.slide.present > .bullets,
+.reveal .slides > section.slide.present > .concept,
+.reveal .slides > section.slide.present > .shot,
+.reveal .slides > section.slide.present > .compare,
+.reveal .slides > section.slide.present > .break__wrap {
+  animation: elemEnter .62s cubic-bezier(.2,.7,.2,1) both;
+}
+.reveal .slides > section.slide.present > .slide__badge { animation-delay: .02s; }
+.reveal .slides > section.slide.present > .kicker        { animation-delay: .06s; }
+.reveal .slides > section.slide.present > .slide__h,
+.reveal .slides > section.slide.present > h2             { animation-delay: .12s; }
+.reveal .slides > section.slide.present > .lead          { animation-delay: .20s; }
+.reveal .slides > section.slide.present > .card-grid,
+.reveal .slides > section.slide.present > .bullets,
+.reveal .slides > section.slide.present > .concept,
+.reveal .slides > section.slide.present > .shot,
+.reveal .slides > section.slide.present > .compare,
+.reveal .slides > section.slide.present > .break__wrap   { animation-delay: .26s; }
+
+/* per-item stagger inside lists / card grids — each child eases up in sequence */
+.reveal .slides > section.slide.present .card-grid > .card,
+.reveal .slides > section.slide.present .bullets > li {
+  animation: elemEnterUp .6s cubic-bezier(.2,.7,.2,1) both;
+}
+.reveal .slides > section.slide.present .card-grid > .card:nth-child(1),
+.reveal .slides > section.slide.present .bullets > li:nth-child(1) { animation-delay: .30s; }
+.reveal .slides > section.slide.present .card-grid > .card:nth-child(2),
+.reveal .slides > section.slide.present .bullets > li:nth-child(2) { animation-delay: .38s; }
+.reveal .slides > section.slide.present .card-grid > .card:nth-child(3),
+.reveal .slides > section.slide.present .bullets > li:nth-child(3) { animation-delay: .46s; }
+.reveal .slides > section.slide.present .card-grid > .card:nth-child(4),
+.reveal .slides > section.slide.present .bullets > li:nth-child(4) { animation-delay: .54s; }
+.reveal .slides > section.slide.present .card-grid > .card:nth-child(5),
+.reveal .slides > section.slide.present .bullets > li:nth-child(5) { animation-delay: .62s; }
+.reveal .slides > section.slide.present .card-grid > .card:nth-child(n+6),
+.reveal .slides > section.slide.present .bullets > li:nth-child(n+6) { animation-delay: .70s; }
+
+/* divider slides: the giant numeral + the title block sweep in */
+.reveal .slides > section.slide--divider.present .divider__num {
+  animation: elemEnterUp .8s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: .04s;
+}
+.reveal .slides > section.slide--divider.present .divider__wrap {
+  animation: elemEnter .66s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: .22s;
+}
+
+/* ── THE COVER (#/0): the first shot. A kinetic, staggered reveal of the
+   brand-mark, kicker, the giant title, the lead, then the chips. Each beat
+   lands a touch later than the last so the headline feels "built". ────────── */
+@keyframes coverMark {
+  from { opacity: 0; transform: translateY(-12px) scale(.9); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0)     scale(1);  filter: blur(0); }
+}
+@keyframes coverTitle {
+  from { opacity: 0; transform: translateY(34px); filter: blur(14px);
+         clip-path: inset(0 0 100% 0); }
+  60%  { filter: blur(2px); clip-path: inset(0 0 0 0); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0);
+         clip-path: inset(0 0 0 0); }
+}
+@keyframes coverChip {
+  from { opacity: 0; transform: translateY(16px) scale(.94); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.reveal .slides > section.slide--title.present .brand-mark {
+  animation: coverMark .7s cubic-bezier(.2,.8,.25,1) both; animation-delay: .10s;
+}
+.reveal .slides > section.slide--title.present .kicker {
+  animation: elemEnter .6s cubic-bezier(.2,.7,.2,1) both; animation-delay: .26s;
+}
+.reveal .slides > section.slide--title.present .deck-title,
+.reveal .slides > section.slide--title.present h1 {
+  animation: coverTitle 1.05s cubic-bezier(.16,.84,.24,1) both; animation-delay: .40s;
+}
+.reveal .slides > section.slide--title.present .lead {
+  animation: elemEnter .7s cubic-bezier(.2,.7,.2,1) both; animation-delay: .92s;
+}
+.reveal .slides > section.slide--title.present .meta > .chip {
+  animation: coverChip .55s cubic-bezier(.2,.8,.25,1) both;
+}
+.reveal .slides > section.slide--title.present .meta > .chip:nth-child(1) { animation-delay: 1.06s; }
+.reveal .slides > section.slide--title.present .meta > .chip:nth-child(2) { animation-delay: 1.16s; }
+.reveal .slides > section.slide--title.present .meta > .chip:nth-child(3) { animation-delay: 1.26s; }
+
+/* closing / thanks slide: warm staggered settle */
+.reveal .slides > section.slide--closing.present > *,
+.reveal .slides > section.slide--thanks.present > * {
+  animation: elemEnter .66s cubic-bezier(.2,.7,.2,1) both;
+}
+.reveal .slides > section.slide--thanks.present > .kicker       { animation-delay: .08s; }
+.reveal .slides > section.slide--thanks.present > .thanks__title{ animation-delay: .18s; }
+.reveal .slides > section.slide--thanks.present > .thanks__lead { animation-delay: .30s; }
+.reveal .slides > section.slide--thanks.present > .qr           { animation-delay: .42s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+  .card { transition: none; }
+  .reveal .fragment.fade-up { transform: none; }
+
+  /* kill EVERY ambient + entrance animation; freeze layers at rest, content
+     fully visible. Nothing moves, blurs, or sweeps. */
+  .reveal .slides > section.slide::before,
+  .reveal .slides > section.slide::after,
+  .reveal .slides > section.slide--title::before,
+  .reveal .slides > section.slide--title::after,
+  .reveal .slides > section.slide--divider::before,
+  .reveal .slides > section.slide--divider::after,
+  .reveal .slides > section.slide--closing::before,
+  .reveal .slides > section.slide--closing::after {
+    animation: none !important;
+    transform: none !important;
+  }
+  .reveal .slides > section.slide.present *,
+  .reveal .slides > section.slide.present {
+    animation: none !important;
+  }
+}
+
+/* ============================================================================
+   9 · grain overlay + focus accessibility
+   ========================================================================== */
+.grain-overlay {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px;
+}
+
+/* visible coral focus ring for keyboard nav (AA) */
+.reveal a:focus-visible,
+.reveal button:focus-visible,
+.reveal [tabindex]:focus-visible,
+.reveal .controls button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================================
+   10 · safety: never let content overflow a slide
+   ========================================================================== */
+.reveal .slides section img,
+.reveal .slides section svg { max-width: 100%; }
+.reveal .slides section * { min-width: 0; }
+
+/* ============================================================================
+   11 · ROUND 2 — מצב שקופית (משימה/הסבר), הפסקות, מרכוז-הגדלה, תודה+QR
+   ========================================================================== */
+
+/* ─── 11.1 תג מצב: "משימה" (מעשי) או "הסבר" (תיאוריה) ──────────────────── */
+.slide__badge {
+  position: absolute;
+  /* LOCKED top-left corner, physical units only (no logical props — mixing them
+     in RTL nullified `left` and let the pill drift / stretch full-width).
+     width:max-content guarantees the pill is only as wide as its 4-letter text. */
+  top: 1.3rem;
+  left: 1.6rem;
+  right: auto;
+  width: max-content;
+  max-width: max-content;
+  z-index: 6;
+  display: inline-flex; align-items: center; gap: 0.5ch;
+  font-family: var(--font-he-body); font-weight: 700;
+  font-size: 0.82rem; letter-spacing: 0.01em; line-height: 1;
+  padding: 0.4rem 0.85rem; border-radius: var(--r-pill);
+  border: 1px solid; white-space: nowrap;
+  backdrop-filter: blur(5px);
+}
+.slide__badge::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; flex: none; }
+.slide__badge--task {
+  color: var(--accent-2);
+  border-color: rgba(var(--amb-2-rgb), 0.6);
+  background: rgba(var(--amb-2-rgb), 0.18);
+}
+.slide__badge--task::before { background: var(--accent-2); box-shadow: 0 0 10px rgba(242,193,78,0.75); }
+.slide__badge--info {
+  color: var(--text);
+  border-color: rgba(255,255,255,0.34);
+  background: rgba(255,255,255,0.13);
+}
+.slide__badge--info::before { background: var(--text); box-shadow: 0 0 9px rgba(255,255,255,0.55); }
+
+/* ─── 11.2 הגדלה ומרכוז (היכרות, סיכום, קהילה) ────────────────────────── */
+.bullets--xl li {
+  font-size: clamp(1.25rem, 2.3vw, 1.62rem);
+  line-height: 1.5;
+  padding-inline-start: 2rem;
+  margin-bottom: 0.9rem;
+}
+.bullets--xl li::before { font-size: 1.1em; }
+.slide.center-text { align-items: center; text-align: center; }
+.slide.center-text .slide__h { text-align: center; }
+.slide.center-text .kicker { justify-content: center; }
+.slide.center-text .kicker::before { display: none; }
+.slide.center-text .lead { margin-inline: auto; max-width: 52ch; }
+.slide.center-text .concept,
+.slide.center-text .concept__body { max-width: 100%; margin-inline: auto; }
+.slide.center-text .bullets { display: inline-block; text-align: right; margin-inline: auto; }
+
+/* ─── 11.3 שקופית הפסקה ───────────────────────────────────────────────── */
+.slide--break { align-items: flex-start; text-align: right; padding-inline-end: clamp(3rem, 6vw, 5.5rem); }
+.break__wrap { max-width: 82%; position: relative; z-index: 1; }
+.break__time {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7.5vw, 5.6rem); font-weight: 700;
+  color: var(--text); letter-spacing: -0.02em; line-height: 1;
+  margin: 0.4rem 0 1.5rem;
+}
+.break__time .en { color: var(--accent); }
+.break__next {
+  border: 1px solid var(--line-strong);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--bg-elev);
+  padding: 1.15rem 1.45rem; max-width: 50ch;
+  box-shadow: var(--shadow-soft);
+}
+.break__next h3 {
+  font-family: var(--font-he-body); font-size: 0.82rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.07em; margin: 0 0 0.55rem;
+}
+.break__next p { margin: 0; color: var(--text); font-size: 1.2rem; line-height: 1.5; }
+
+/* ─── 11.4 שקופית תודה + QR לקהילה ─────────────────────────────────────── */
+.slide--thanks { align-items: center; justify-content: center; text-align: center; }
+.slide--thanks > * { position: relative; z-index: 1; }
+.thanks__title {
+  font-family: var(--font-he-head);
+  font-size: clamp(3.2rem, 9vw, 6.8rem); font-weight: 800;
+  color: var(--text); letter-spacing: -0.02em; line-height: 0.98; margin: 0 0 0.6rem;
+}
+.thanks__lead { color: var(--text-dim); font-size: 1.28rem; margin: 0 0 2rem; }
+.qr { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.qr__frame {
+  width: 226px; height: 226px; padding: 14px;
+  background: #fff; border-radius: var(--r-md); box-shadow: var(--shadow-lift);
+}
+.qr__frame img, .qr__frame svg { width: 100%; height: 100%; display: block; }
+.qr__cap { font-family: var(--font-he-body); font-weight: 700; color: var(--text); font-size: 1.06rem; }
+.qr__cap .accent { color: var(--accent); }
+
+/* ─── 11.5 איזון רשת "מה נצא איתו" (5 כרטיסים — שורה אחרונה ממורכזת) ────
+   basis נגזר מה-gap עצמו (1.15rem, כפי שנקבע ב-§14) — אסור לקבע אחוז ידני
+   שמתנתק מה-gap, אחרת השורה נשברת ל-2+2+1. */
+.slide--outcomes .card-grid {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 1.15rem;
+}
+.slide--outcomes .card {
+  flex: 0 0 calc((100% - 2.3rem) / 3);
+  max-width: calc((100% - 2.3rem) / 3);
+  box-sizing: border-box;
+}
+/* גרסת 4 כרטיסים (דוגמאות מיזם): רשת 2×2 רחבה ונינוחה */
+.slide--outcomes .card-grid--4 .card {
+  flex: 0 0 calc((100% - 1.15rem) / 2);
+  max-width: calc((100% - 1.15rem) / 2);
+}
+
+/* ============================================================================
+   12 · COMPOSITION ARCHETYPE SYSTEM  (pass 1 — layout / composition)
+   ----------------------------------------------------------------------------
+   Goal: kill the "everything pinned right-and-centered" monotony. Each slide
+   declares a `data-layout` archetype on its <section>. The archetype controls
+   ONLY composition: the vertical anchor (top / center / bottom), the horizontal
+   placement & measure of the content column, and the diagonal of the eye.
+   Nothing here touches copy, notes, badges, breaks, QR or screenshot capture.
+
+   These rules are deliberately HIGH-specificity (scoped through
+   `.reveal .slides > section.slide[data-layout=...]`) so they win over the
+   generic `.slide { justify-content:center }` frame without `!important`,
+   except where reveal's inline `display` forces our hand (already handled).
+
+   Vertical anchors are expressed via justify-content; horizontal drift via an
+   asymmetric inner column with margin-inline + a controlled max-width (measure).
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── vertical anchor primitives ─────────────────────────────────────────── */
+.reveal .slides > section.slide[data-layout~="top"]    { justify-content: flex-start; padding-top: clamp(3.2rem, 8vh, 5.6rem); }
+.reveal .slides > section.slide[data-layout~="bottom"] { justify-content: flex-end;   padding-bottom: clamp(3rem, 7.5vh, 5.2rem); }
+.reveal .slides > section.slide[data-layout~="center"] { justify-content: center; }
+
+/* ── horizontal drift + measure primitives (RTL: inline-start = right) ──────
+   "push" variants shove the content column off the right wall toward the
+   centre/left so a generous void of negative space opens on the right. */
+.reveal .slides > section.slide[data-layout~="measure"] .slide__h,
+.reveal .slides > section.slide[data-layout~="measure"] .lead { max-width: 22ch; }
+
+.reveal .slides > section.slide[data-layout~="inset"]  { padding-inline-end: clamp(4rem, 11vw, 10rem); }
+.reveal .slides > section.slide[data-layout~="pull"]   { padding-inline-start: clamp(4rem, 12vw, 11rem); }
+
+/* ── ARCHETYPE A · FULL-BLEED HERO (title) ──────────────────────────────────
+   Title sinks to the lower band, scales up, and the brand mark floats top-right
+   so the slide reads as a poster with a tall calm sky above the headline. */
+.reveal .slides > section.slide--title[data-layout~="hero-low"] {
+  justify-content: flex-end;
+  padding-bottom: clamp(3.4rem, 9vh, 6rem);
+}
+.slide--title[data-layout~="hero-low"] .brand-mark {
+  position: absolute;
+  top: clamp(2.6rem, 7vh, 4.2rem);
+  inset-inline-start: var(--pad-x);   /* RTL → right edge */
+  margin: 0;
+}
+.slide--title[data-layout~="hero-low"] .title__wrap { max-width: 82%; }
+.slide--title[data-layout~="hero-low"] .deck-title {
+  font-size: clamp(3.1rem, 7.4vw, 5.3rem);
+  letter-spacing: -0.03em;
+}
+
+/* ── ARCHETYPE B · GIANT CENTERED STATEMENT (manifesto) ─────────────────────
+   For the "כן / לא" expectations + community slides: pull the whole block to a
+   true optical centre, oversize the headline, cap the measure tight. */
+.reveal .slides > section.slide[data-layout~="statement"] {
+  align-items: center; text-align: center; justify-content: center;
+}
+.slide[data-layout~="statement"] .concept,
+.slide[data-layout~="statement"] .concept__body { max-width: 60ch; margin-inline: auto; }
+.slide[data-layout~="statement"] .slide__h {
+  font-size: clamp(2.4rem, 5.2vw, 3.7rem);
+  text-align: center;
+  margin-bottom: 0.7rem;
+}
+.slide[data-layout~="statement"] .lead { margin-inline: auto; max-width: 46ch; text-align: center; }
+.slide[data-layout~="statement"] .kicker { justify-content: center; }
+.slide[data-layout~="statement"] .kicker::before { display: none; }
+.slide[data-layout~="statement"] .bullets { display: inline-block; text-align: right; }
+
+/* ── ARCHETYPE C · ASYMMETRIC TEXT-TOP (outcomes / compare / wide grids) ─────
+   Heading + lead ride high on the right; the grid / comparison fills the lower
+   two-thirds. Generates a strong top-down diagonal instead of a centred slab. */
+.slide[data-layout~="top"] .slide__h { margin-bottom: 0.7rem; }
+.reveal .slides > section.slide--outcomes[data-layout~="top"] { justify-content: flex-start; }
+.slide--outcomes[data-layout~="top"] .card-grid { margin-top: 1.4rem; }
+.slide--compare[data-layout~="top"] .compare { margin-top: 1.1rem; }
+
+/* ── ARCHETYPE D · SPLIT / SPLIT-FLIP (concept-visual) ──────────────────────
+   Default split is text(right)|visual(left). The FLIP variant mirrors it to
+   visual(right)|text(left) so consecutive theory slides never sit identically.
+   We also let some splits anchor high vs. centred for extra rhythm. */
+.slide--concept-visual[data-layout~="flip"] .concept--split {
+  grid-template-columns: 1.05fr 1fr;     /* visual | text */
+}
+.slide--concept-visual[data-layout~="flip"] .concept__visual { order: -1; }
+.slide--concept-visual[data-layout~="flip"] .concept__body   { order: 0; }
+/* heavier visual emphasis on some splits */
+.slide--concept-visual[data-layout~="visual-wide"] .concept--split {
+  grid-template-columns: 0.92fr 1.18fr;
+}
+.slide--concept-visual[data-layout~="flip"][data-layout~="visual-wide"] .concept--split {
+  grid-template-columns: 1.18fr 0.92fr;
+}
+
+/* ── ARCHETYPE E · TEXT + CODE, ANCHORED HIGH & LEFT-WIDE (CLAUDE.md) ────────
+   The CLAUDE.md slide gets its own off-grid shape: text rides the top-right,
+   the terminal block stretches wide beneath it, giving an editorial spread. */
+.reveal .slides > section.slide--concept[data-layout~="editorial"] {
+  justify-content: flex-start;
+  padding-top: clamp(2.8rem, 7vh, 4.4rem);
+  align-items: flex-start;
+}
+.slide--concept[data-layout~="editorial"] .concept__body { max-width: 78ch; }
+.slide--concept[data-layout~="editorial"] pre.mono { margin-top: 1.1rem; }
+
+/* ── ARCHETYPE F · BIG-NUMBER DIVIDER variants ──────────────────────────────
+   Dividers already render a giant ghost numeral. We vary the vertical anchor of
+   the title block (top / center / bottom) and nudge the numeral with it, so the
+   four chapter breaks don't all sit at mid-right. */
+.reveal .slides > section.slide--divider[data-layout~="div-top"] {
+  justify-content: flex-start;
+  padding-top: clamp(3.4rem, 9vh, 5.8rem);
+}
+.reveal .slides > section.slide--divider[data-layout~="div-bottom"] {
+  justify-content: flex-end;
+  padding-bottom: clamp(3.2rem, 8.5vh, 5.4rem);
+}
+.slide--divider[data-layout~="div-top"]    .divider__num { top: 34%; }
+.slide--divider[data-layout~="div-bottom"] .divider__num { top: 66%; }
+/* a centred, monumental divider (no chapter numeral present, e.g. "שולחים
+   לעבודה" / "מה הלאה" build block): centre the title and let it breathe. */
+.reveal .slides > section.slide--divider[data-layout~="div-hero"] {
+  align-items: center; text-align: center; justify-content: center;
+  padding-inline-end: var(--pad-x);
+}
+.slide--divider[data-layout~="div-hero"] .divider__wrap { max-width: 82%; }
+.slide--divider[data-layout~="div-hero"] .divider__wrap::before { display: none; }
+.slide--divider[data-layout~="div-hero"] .kicker { justify-content: center; }
+.slide--divider[data-layout~="div-hero"] .kicker::before { display: none; }
+.slide--divider[data-layout~="div-hero"] .divider__title {
+  font-size: clamp(3rem, 7vw, 5.2rem);
+}
+
+/* ── ARCHETYPE G · SCREENSHOT compositions ──────────────────────────────────
+   Three different shot compositions so the 9 screenshot slides never repeat:
+   · shot-center : title high, framed shot centred & large below (default-ish)
+   · shot-low    : title rides high-right, shot anchored to the lower band
+   · shot-aside  : heading + the caption-as-lead sit on the right; the window is
+                   pulled toward the left, asymmetric editorial product shot.   */
+.reveal .slides > section.slide--screenshot[data-layout~="shot-center"] {
+  justify-content: center;
+}
+.slide--screenshot[data-layout~="shot-center"] .slide__h { text-align: center; }
+.slide--screenshot[data-layout~="shot-center"] .shot { max-width: 860px; margin-inline: auto; }
+
+/* shot-low: title rides at the top-right, the window stacks calmly below it
+   (normal flow — no absolute overlap), centred. */
+.reveal .slides > section.slide--screenshot[data-layout~="shot-low"] {
+  justify-content: flex-start;
+  gap: clamp(0.9rem, 2.6vh, 1.6rem);
+  padding-top: clamp(2.4rem, 6vh, 3.6rem);
+}
+.slide--screenshot[data-layout~="shot-low"] .slide__h {
+  margin: 0;
+  text-align: right;
+  align-self: stretch;
+}
+.slide--screenshot[data-layout~="shot-low"] .shot { max-width: 720px; margin-inline: auto; }
+
+/* shot-aside: same calm top-down stack, but the window is pulled toward the
+   left — asymmetric editorial product shot with a void on the right. */
+.reveal .slides > section.slide--screenshot[data-layout~="shot-aside"] {
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: clamp(0.9rem, 2.6vh, 1.6rem);
+  padding-top: clamp(2.4rem, 6vh, 3.6rem);
+}
+.slide--screenshot[data-layout~="shot-aside"] .slide__h {
+  margin: 0;
+  text-align: right;
+}
+.slide--screenshot[data-layout~="shot-aside"] .shot {
+  max-width: 680px;
+  margin-inline: 0 auto;       /* pull window toward the left, void on the right */
+}
+
+/* keep the task/info badge clear of any heading that we re-anchored to the top */
+.slide[data-layout~="shot-low"] .slide__badge,
+.slide[data-layout~="shot-aside"] .slide__badge,
+.slide[data-layout~="hero-low"] .slide__badge { top: clamp(1.05rem, 2.6vh, 1.7rem); }
+
+/* ── ARCHETYPE H · BOTTOM-ANCHORED TEXT (live-preview concept) ───────────────
+   A plain concept slide where the block drops to the lower band, leaving a tall
+   calm void above — a deliberate counter-beat to the top-anchored neighbours. */
+.reveal .slides > section.slide--concept[data-layout~="bottom"] {
+  justify-content: flex-end;
+  padding-bottom: clamp(3rem, 8vh, 5rem);
+  align-items: flex-start;
+}
+.slide--concept[data-layout~="bottom"] .concept__body { max-width: 72ch; }
+
+/* ============================================================================
+   13 · PREMIUM FINISH  (pass 4 — depth · lighting · materiality · micro-polish)
+   ----------------------------------------------------------------------------
+   Surgical, additive only. No new content, no structural change, no new
+   keyframe motion (so prefers-reduced-motion stays fully honoured). Pure
+   craft: warm/coral colored depth (never grey), inset catch-lights, hairline
+   highlights on every elevated surface, crisper edges, refined micro-elements.
+   Built on the existing token set (--amb / --shadow-* / radii) for coherence.
+   ========================================================================== */
+
+/* ── 13.1 reusable lighting tokens ─────────────────────────────────────────
+   one hairline highlight + one ambient-tinted halo, reused across surfaces so
+   the whole deck shares a single, consistent quality of light. */
+:root {
+  --hairline:      rgba(255,255,255,0.09);   /* crisp top catch-light edge */
+  --hairline-soft: rgba(255,255,255,0.05);
+  --inner-light:   inset 0 1px 0 rgba(255,255,255,0.08);
+  --halo-amb:      0 0 42px -10px rgba(var(--amb-rgb), 0.30);
+  --shadow-depth:  0 30px 70px -26px rgba(0,0,0,0.72), 0 12px 30px -20px rgba(var(--amb-rgb),0.20);
+}
+
+/* ── 13.2 card hover — consistent coral-tinted lift (no grey, brand halo) ──── */
+.card:hover {
+  box-shadow:
+    var(--shadow-depth),
+    var(--halo-amb),
+    var(--inner-light);
+}
+
+/* ── 13.3 chips · pills · tags — crisp dual-edge (bright top, dark bottom) ─── */
+.chip {
+  border-color: var(--hairline);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    inset 0 -1px 0 rgba(0,0,0,0.25),
+    0 6px 18px -12px rgba(0,0,0,0.6);
+}
+.pill, .tag {
+  position: relative;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 0 22px -14px rgba(var(--amb-rgb),0.5);
+}
+
+/* ── 13.4 state badge — hairline + soft drop so it reads as a floating token ── */
+.slide__badge {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 8px 22px -14px rgba(0,0,0,0.7);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.slide__badge--task {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    0 0 26px -12px rgba(var(--amb-2-rgb),0.5),
+    0 8px 22px -14px rgba(0,0,0,0.7);
+}
+
+/* ── 13.5 kicker · eyebrow — tiny glow on the lead rule, tabular crispness ─── */
+.kicker::before, .eyebrow::before {
+  box-shadow: 0 0 10px -2px rgba(var(--amb-rgb), 0.6);
+}
+
+/* ── 13.6 glass / concept-visual panel — sharper hairline frame + grounding ── */
+.concept__visual {
+  border-color: var(--hairline);
+  box-shadow:
+    var(--shadow-depth),
+    0 0 52px -16px rgba(var(--amb-rgb), 0.32),
+    var(--inner-light),
+    inset 0 -1px 0 rgba(0,0,0,0.3);
+}
+/* brighten the top hairline streak so the panel's upper edge catches light */
+.concept__visual::before {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22) 30%, rgba(var(--amb-rgb),0.7) 50%, rgba(255,255,255,0.22) 70%, transparent);
+  opacity: 0.9;
+}
+
+/* ── 13.7 screenshot window — premium device edge (bright top, deep base) ──── */
+.shot, .window-frame {
+  border-color: var(--hairline);
+  box-shadow:
+    0 44px 96px -34px rgba(0,0,0,0.82),
+    0 0 64px -22px rgba(var(--amb-rgb), 0.34),
+    var(--inner-light),
+    inset 0 -1px 0 rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.015);
+}
+/* a slim glowing seam under the chrome bar so the titlebar feels machined */
+.shot__chrome, .window-titlebar {
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 2px 0 rgba(0,0,0,0.4);
+}
+.shot__chrome span {
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.35), inset 0 -1px 1px rgba(0,0,0,0.3);
+}
+
+/* ── 13.8 compare columns — material lift + colored grounding per side ─────── */
+.compare__col, .ba-col {
+  box-shadow:
+    var(--shadow-soft),
+    inset 0 1px 0 rgba(255,255,255,0.055);
+}
+.compare--yes, .ba-col.good {
+  box-shadow:
+    0 18px 50px -24px rgba(0,0,0,0.6),
+    0 0 34px -12px rgba(127,176,105,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.compare__col h3::before {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* ── 13.9 break panel · q-list markers — refined coral grounding ───────────── */
+.break__next {
+  box-shadow:
+    var(--shadow-soft),
+    0 0 30px -16px rgba(var(--amb-rgb),0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.q-list li::before {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    0 0 14px -6px rgba(232,99,58,0.5);
+}
+
+/* ── 13.10 divider numeral — soft cast-shadow grounds the monument ─────────── */
+.slide--divider .divider__num {
+  filter:
+    drop-shadow(0 0 44px rgba(var(--amb-rgb), 0.30))
+    drop-shadow(0 22px 40px rgba(0,0,0,0.5));
+}
+
+/* ── 13.11 QR frame — warm rim so the white card doesn't read as a flat cutout */
+.qr__frame {
+  box-shadow:
+    var(--shadow-lift),
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 0 60px -18px rgba(var(--amb-rgb),0.4);
+}
+
+/* ── 13.12 nav controls — frosted pill arrows with hairline + accent on hover */
+.reveal .controls {
+  inset-inline-end: 1.4rem;
+  bottom: 1.05rem;
+}
+.reveal .controls button {
+  width: 2.6rem; height: 2.6rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: rgba(20,18,16,0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 6px 18px -12px rgba(0,0,0,0.6);
+  transition: color .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.reveal .controls .navigate-left.enabled:hover,
+.reveal .controls .navigate-right.enabled:hover,
+.reveal .controls .navigate-up.enabled:hover,
+.reveal .controls .navigate-down.enabled:hover {
+  background: rgba(232,99,58,0.12);
+  border-color: var(--accent-line);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 22px -8px rgba(232,99,58,0.5);
+}
+
+/* ── 13.13 slide-number — tighter hairline + subtle inner light ─────────────── */
+.reveal .slide-number {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    0 8px 24px -12px rgba(0,0,0,0.72);
+}
+
+/* ── 13.14 progress bar — slim, lifted off the floor a hair so it reads clean ─ */
+.reveal .progress { height: 3px; }
+
+/* ── 13.15 terminal block — deeper plate so code reads as inset, not pasted ── */
+.reveal pre, pre.mono {
+  box-shadow:
+    var(--shadow-soft),
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    inset 0 0 40px -20px rgba(0,0,0,0.6);
+}
+
+/* ── 13.16 lead text — a touch more presence on the secondary line ─────────── */
+.lead { letter-spacing: -0.005em; }
+
+/* ── 13.17 honour reduced-motion for the one transition we added (controls) ── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal .controls button { transition: none; }
+}
+
+/* ============================================================================
+   14 · BOLD KINETIC — FILL THE FRAME (round-3 corrections)
+   The pass-1 archetypes left dead voids and overflowed the frame. Maximalist
+   principle: text/visual IS the frame — big, centred, no empty bands, no bleed.
+   These rules deliberately override section 12 (same/higher specificity, later
+   in source) to reclaim the full 1280×720 stage on every slide.
+   ========================================================================== */
+
+/* ---- HERO: centred poster, massive headline, mark sits above (no overlap) -- */
+.reveal .slides > section.slide--title[data-layout~="hero-low"] {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-bottom: var(--pad-y);
+}
+.slide--title[data-layout~="hero-low"] .title__wrap {
+  max-width: 94%;
+  display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+}
+.slide--title[data-layout~="hero-low"] .brand-mark {
+  position: static;
+  height: clamp(58px, 8.4vh, 80px);
+  width: auto;
+  margin: 0 0 0.5rem;
+}
+.slide--title[data-layout~="hero-low"] .kicker { justify-content: center; }
+.slide--title[data-layout~="hero-low"] .kicker::before { display: none; }
+.slide--title[data-layout~="hero-low"] .deck-title {
+  font-size: clamp(3.6rem, 8.6vw, 6.6rem);
+  line-height: 0.97;
+  letter-spacing: -0.035em;
+  margin: 0.45rem 0 0.75rem;
+  text-align: center;
+}
+.slide--title[data-layout~="hero-low"] .lead { margin-inline: auto; font-size: clamp(1.1rem, 1.9vw, 1.5rem); }
+.slide--title[data-layout~="hero-low"] .meta { justify-content: center; margin-top: 1.2rem; }
+
+/* ---- DIVIDERS: centred + contained; giant numeral = clipped watermark ------ */
+.reveal .slides > section.slide--divider[data-layout] {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;                 /* numeral may bleed, but clipped cleanly */
+  padding-block: var(--pad-y);
+  padding-inline-end: var(--pad-x);
+}
+.slide--divider[data-layout] .divider__wrap {
+  max-width: 88%;
+  margin-inline: auto;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; z-index: 2;
+}
+.slide--divider[data-layout] .divider__wrap::before { display: none; }
+.slide--divider[data-layout] .kicker { justify-content: center; margin-bottom: 1rem; }
+.slide--divider[data-layout] .kicker::before { display: none; }
+.slide--divider[data-layout] .divider__num {
+  left: 0; right: 0; inset-inline: 0;
+  width: 100%; text-align: center;
+  top: 50%; transform: translateY(-50%);
+  font-size: clamp(16rem, 35vw, 32rem);
+  z-index: 0;
+}
+.slide--divider[data-layout] .divider__num::after { display: none; }
+.slide--divider[data-layout] .divider__title {
+  font-size: clamp(3.4rem, 7.4vw, 5.8rem);
+  position: relative; z-index: 2;
+}
+/* the pass-3 entrance animated `transform` and clobbered our translateY(-50%)
+   centring (numeral sank to the lower half). Re-key the entrance so it ends
+   exactly on the centred transform. */
+.reveal .slides > section.slide--divider[data-layout].present .divider__num {
+  animation: dividerNumIn .85s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes dividerNumIn {
+  from { opacity: 0; transform: translateY(calc(-50% + 30px)); filter: blur(10px); }
+  to   { opacity: 1; transform: translateY(-50%); filter: blur(0); }
+}
+
+/* ---- STATEMENT slides: oversize the headline, fill ------------------------- */
+.slide[data-layout~="statement"] .slide__h { font-size: clamp(3rem, 6.6vw, 4.8rem); line-height: 1.02; }
+.slide[data-layout~="statement"] .lead { font-size: clamp(1.2rem, 2.1vw, 1.6rem); max-width: 54ch; }
+.slide[data-layout~="statement"] .bullets--xl li { font-size: clamp(1.4rem, 2.6vw, 1.95rem); margin-bottom: 1rem; }
+
+/* ---- OUTCOMES: centred, cards larger, fill the whole frame ----------------- */
+.reveal .slides > section.slide--outcomes[data-layout] { justify-content: center; }
+.slide--outcomes[data-layout] .slide__h { font-size: clamp(2.5rem, 5.2vw, 3.7rem); margin-bottom: 1.5rem; }
+.slide--outcomes[data-layout] .card-grid { margin-top: 0; gap: 1.15rem; }
+.slide--outcomes .card { padding: 1.7rem 1.55rem; }
+.slide--outcomes .card h3 { font-size: 1.52rem; margin-bottom: 0.5rem; }
+.slide--outcomes .card p { font-size: 1.08rem; line-height: 1.5; }
+
+/* ---- SCREENSHOTS: big windows that still leave room for the caption -------
+   height-capped so the chrome + image + caption never overflow the frame. */
+.slide--screenshot[data-layout~="shot-center"] .shot { max-width: 880px; }
+.slide--screenshot[data-layout~="shot-low"]    .shot { max-width: 840px; }
+.slide--screenshot[data-layout~="shot-aside"]  .shot { max-width: 840px; }
+.slide--screenshot .shot__img { max-height: 52vh; width: auto; max-width: 100%; margin-inline: auto; }
+/* screenshot headings: smaller cap + wrap + contained so long bilingual titles
+   ("Claude Code — תוסף ב-Antigravity") never bleed off the frame. */
+.slide--screenshot .slide__h {
+  font-size: clamp(1.7rem, 3.2vw, 2.45rem);
+  /* shrink the heading box to its text and reserve an 8.5rem lane on the left
+     so it never overlaps the top-left state badge. RTL block → hugs the right. */
+  width: fit-content;
+  max-width: calc(100% - 8.5rem);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  line-height: 1.08;
+}
+.slide--screenshot[data-layout~="shot-center"] .slide__h { margin-inline: auto; }
+
+/* ---- THEORY (concept-visual): larger heading, bullets and diagram --------- */
+.slide--concept-visual .slide__h { font-size: clamp(2.3rem, 4.8vw, 3.5rem); }
+.slide--concept-visual .lead { font-size: clamp(1.1rem, 1.95vw, 1.45rem); }
+.slide--concept-visual .bullets li { font-size: clamp(1.08rem, 1.95vw, 1.38rem); line-height: 1.5; }
+.slide--concept-visual .concept--split { gap: clamp(1.6rem, 4vw, 3.2rem); align-items: center; }
+.slide--concept-visual .concept__visual { padding: clamp(1rem, 2.4vw, 1.9rem); }
+
+/* ---- generic concept (text) slides: larger heading + body ----------------- */
+.slide--concept .slide__h { font-size: clamp(2.3rem, 4.8vw, 3.5rem); }
+.slide--concept .bullets li { font-size: clamp(1.1rem, 1.95vw, 1.4rem); }
+
+/* ---- COMPARE (before/after): larger, fills frame -------------------------- */
+.slide--compare .slide__h { font-size: clamp(2.2rem, 4.6vw, 3.3rem); }
+.slide--compare .compare__col h3 { font-size: 1.5rem; }
+.slide--compare .compare__col .bullets li { font-size: clamp(1.05rem, 1.85vw, 1.3rem); }
+
+/* ---- KILL DEAD VOIDS: the top/bottom-anchored archetypes recentre --------- */
+.reveal .slides > section.slide[data-layout~="top"],
+.reveal .slides > section.slide[data-layout~="bottom"] { justify-content: center; }
+.reveal .slides > section.slide--concept[data-layout~="editorial"] { justify-content: center; }
+
+/* ---- BREAK slides: monumental timer, centred, fills frame ------------------ */
+.reveal .slides > section.slide--break { justify-content: center; align-items: center; text-align: center; }
+.slide--break .break__wrap { max-width: 92%; margin-inline: auto; display: flex; flex-direction: column; align-items: center; }
+.slide--break .kicker { justify-content: center; }
+.slide--break .kicker::before { display: none; }
+.slide--break .break__time { font-size: clamp(4.2rem, 12vw, 9.5rem); margin: 0.4rem 0 1.4rem; }
+.slide--break .break__next { max-width: 58ch; text-align: center; }
+.slide--break .break__next p { font-size: clamp(1.15rem, 2vw, 1.45rem); }
+
+/* ---- THEORY divider: neural motif drifts behind the title ------------------ */
+.slide--divider .divider-motif {
+  position: absolute;
+  inset-inline-start: clamp(1.5rem, 5vw, 5rem);  /* RTL → right */
+  top: 50%;
+  width: clamp(260px, 34vw, 430px);
+  opacity: 0.42;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 0 34px rgba(var(--amb-rgb), 0.34));
+  animation: motifFloat 15s ease-in-out infinite;
+}
+@keyframes motifFloat {
+  0%,100% { transform: translateY(-50%) rotate(0deg); }
+  50%     { transform: translateY(-54%) rotate(2.5deg); }
+}
+@media (prefers-reduced-motion: reduce) { .slide--divider .divider-motif { animation: none; transform: translateY(-50%); } }
+/* centred variant (numeral-less dividers): motif sits behind the title */
+.slide--divider .divider-motif--center {
+  inset-inline: 0; left: 0; right: 0; margin-inline: auto;
+  width: clamp(340px, 40vw, 520px);
+  opacity: 0.5;
+}
+
+/* ============================================================================
+   15 · ROUND-4 — CONTAINMENT & BALANCE (audit fixes)
+   ========================================================================== */
+
+/* universal: every heading wraps and is capped to the frame — no bleed/clip */
+.reveal .slides .slide__h,
+.reveal .slides .deck-title,
+.reveal .slides .divider__title,
+.reveal .slides .thanks__title {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* comfortable side gutter so content never kisses the frame edge (was ~26px) */
+.slide--compare .compare { padding-inline: clamp(0.4rem, 1.6vw, 1.2rem); }
+
+/* live-preview (slide 22, concept[bottom]): centre the block — kill the left void */
+.reveal .slides > section.slide--concept[data-layout~="bottom"] {
+  justify-content: center; align-items: center; text-align: center;
+}
+.slide--concept[data-layout~="bottom"] .concept,
+.slide--concept[data-layout~="bottom"] .concept__body { max-width: 70ch; margin-inline: auto; }
+.slide--concept[data-layout~="bottom"] .kicker { justify-content: center; }
+.slide--concept[data-layout~="bottom"] .kicker::before { display: none; }
+.slide--concept[data-layout~="bottom"] .lead { margin-inline: auto; }
+.slide--concept[data-layout~="bottom"] .bullets { display: inline-block; text-align: right; margin-inline: auto; }
+
+/* build divider (slide 26): the title block was drifting to the lower band.
+   In the column flex, auto block-margins pull it to true vertical centre,
+   robust against any sibling flow. Motif (absolute) sits behind it. */
+.reveal .slides > section.slide--divider[data-layout~="div-hero"] {
+  justify-content: center; align-items: center;
+}
+.slide--divider[data-layout~="div-hero"] .divider__wrap {
+  margin-block: auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* closing (slide 35, slide--closing): centre the block — kill the left void */
+.reveal .slides > section.slide--closing {
+  align-items: center; text-align: center; justify-content: center;
+}
+.slide--closing .closing { max-width: 66ch; margin-inline: auto; }
+.slide--closing .q-list { display: inline-block; text-align: right; margin-inline: auto; }
+.slide--closing .meta { justify-content: center; }
+
+/* theory diagrams: enlarge the SVG inside its panel so labels read at distance */
+.slide--concept-visual .concept__visual { padding: clamp(0.7rem, 1.6vw, 1.25rem); }
+.slide--concept-visual .concept__visual img,
+.slide--concept-visual .concept__visual svg { width: 100%; height: auto; }
+.slide--concept-visual .concept--split { grid-template-columns: 1fr 1.12fr; }
+.slide--concept-visual[data-layout~="flip"] .concept--split { grid-template-columns: 1.12fr 1fr; }
+
+/* ============================================================================
+   16 · GENERATED HERO IMAGERY (Higgsfield) — photographic atmosphere
+   ========================================================================== */
+/* HERO (slide 1): full-bleed coral/amber light-field photo + dark scrim so the
+   centred headline stays crisp. The mesh ::before is dialled down to let the
+   photograph carry the atmosphere. */
+.reveal .slides > section.slide--title {
+  background-image:
+    radial-gradient(ellipse 74% 66% at 50% 60%, rgba(14,13,12,0.30) 0%, rgba(14,13,12,0.70) 60%, rgba(14,13,12,0.92) 100%),
+    url('../assets/hero-bg.png');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+}
+.reveal .slides > section.slide--title::before { opacity: 0.22; }
+
+/* DIVIDERS: the same photo as a faint texture behind the chapter mesh — adds
+   filmic grain/energy. Kept low so each chapter's ambient hue still dominates. */
+.reveal .slides > section.slide--divider {
+  background-image:
+    linear-gradient(rgba(14,13,12,0.80), rgba(14,13,12,0.86)),
+    url('../assets/hero-bg.png');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+}
+
+/* ============================================================================
+   17 · ROUND-5 — PLACEMENT FIXES (visual audit)
+   ========================================================================== */
+
+/* ── 17.1 screenshot window hugs its image ──────────────────────────────────
+   With a fixed 880px frame, narrower captures floated inside a wide dark plate
+   (letterbox bands on both sides). fit-content collapses the chrome + caption
+   to the capture's true width; min-width keeps skinny captures from looking
+   like a toolbar. */
+.slide--screenshot .shot,
+.slide--screenshot[data-layout~="shot-center"] .shot,
+.slide--screenshot[data-layout~="shot-low"] .shot,
+.slide--screenshot[data-layout~="shot-aside"] .shot {
+  width: fit-content;
+  min-width: 620px;
+  margin-inline: auto;
+}
+
+/* ── 17.2 CLAUDE.md terminal panel — the code IS the visual ─────────────────
+   The pre fills a concept__visual glass panel as a full terminal pane instead
+   of a tiny strip under the bullets. Panel supplies frame + hairline; the pre
+   sheds its own chrome and scales up for read-across-the-room legibility. */
+.concept__visual--code { padding: 0; align-items: stretch; }
+.concept__visual--code pre,
+.concept__visual--code pre.mono {
+  margin: 0;
+  width: 100%;
+  border: 0;
+  border-radius: var(--r-lg);
+  background: transparent;
+  box-shadow: none;
+  padding: 1.6rem 1.8rem;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+.concept__visual--code pre::before { display: none; }
+
+/* ============================================================================
+   18 · ROUND-6 — REVISION PASS (slide-by-slide feedback)
+   New components: full-row presenter names, giant statement headline, numbered
+   learning goals, CLAUDE.md statement strip, recurring "ask Claude" tip pill,
+   compare intro strip, real-project gallery cards, monumental breaks, big QR.
+   ========================================================================== */
+
+/* ── 18.1 hero presenter row — one wide line instead of three chips ───────── */
+.meta--names { justify-content: center; width: 100%; }
+.names-row {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-he-head);
+  font-size: clamp(1.5rem, 2.9vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.names-x {
+  color: var(--accent);
+  font-weight: 700;
+  margin-inline: 0.55em;
+  text-shadow: 0 0 18px rgba(232, 99, 58, 0.5);
+}
+
+/* ── 18.2 giant statement headline ───────────────────────────────────────── */
+.slide__h--giant,
+.slide[data-layout~="statement"] .slide__h--giant {
+  font-size: clamp(3.4rem, 7.6vw, 5.4rem);
+  line-height: 1.0;
+  margin-bottom: 1.1rem;
+}
+
+/* ── 18.3 learning goals — big numbered list ("מה נלמד היום") ─────────────── */
+.learn-list {
+  counter-reset: learn;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  margin: 0.6rem auto 0;
+  max-width: 64ch;
+  text-align: right;
+}
+.learn-list li {
+  position: relative;
+  counter-increment: learn;
+  padding-inline-start: 3rem;
+  font-size: clamp(1.22rem, 2.2vw, 1.58rem);
+  line-height: 1.42;
+  font-weight: 500;
+}
+.learn-list li::before {
+  content: counter(learn);
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.05em;
+  width: 2.1rem; height: 2.1rem;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-numeric);
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 14px -6px rgba(232,99,58,0.5);
+}
+
+/* ── 18.4 statement strip — the calming one-liner under the CLAUDE.md split ── */
+.statement-strip {
+  width: 100%;
+  max-width: none;
+  margin: 1.15rem 0 0;
+  padding: 0.95rem 1.4rem;
+  text-align: center;
+  font-family: var(--font-he-head);
+  font-size: clamp(1.12rem, 2vw, 1.42rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--text);
+  background:
+    linear-gradient(180deg, rgba(var(--amb-rgb), 0.10), rgba(var(--amb-rgb), 0.05)),
+    var(--bg-elev);
+  border: 1px solid rgba(var(--amb-rgb), 0.32);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-soft), 0 0 34px -14px rgba(var(--amb-rgb), 0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ── 18.5 tip note — recurring "שאלו את קלוד" hint as a warm sticky-note ────
+   A small tilted note card pinned to the bottom-left corner (empty on every
+   layout): glowing bulb badge + "טיפ קטן" label + one warm line. */
+.tip {
+  position: absolute;
+  bottom: 3rem;
+  left: 1.7rem;
+  z-index: 5;
+  display: block;
+  width: max-content;
+  max-width: 340px;
+  padding: 0.7rem 1rem 0.75rem 1.05rem;
+  border-radius: 14px;
+  transform: rotate(-1.6deg);
+  background:
+    radial-gradient(130% 110% at 12% 0%, rgba(var(--amb-2-rgb), 0.16), transparent 55%),
+    linear-gradient(168deg, rgba(42,37,29,0.95), rgba(22,20,16,0.92));
+  border: 1px solid rgba(var(--amb-2-rgb), 0.42);
+  box-shadow:
+    0 16px 36px -16px rgba(0,0,0,0.75),
+    0 0 34px -10px rgba(var(--amb-2-rgb), 0.38),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  font-family: var(--font-he-body);
+  text-align: right;
+}
+.tip .tip__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45ch;
+  font-family: var(--font-he-head);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent-2);
+  margin-bottom: 0.2rem;
+}
+.tip .tip__label svg {
+  width: 1.25em; height: 1.25em;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: var(--accent-2);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 7px rgba(242,193,78,0.65));
+}
+.tip .tip__text {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.45;
+}
+.tip .tip__text .accent { font-weight: 700; }
+
+/* ── 18.6 compare intro strip — "תפתח את הפרויקט על localhost" ───────────── */
+.slide--compare .lead--strong {
+  box-sizing: border-box;
+  max-width: none;
+  width: 100%;
+  margin: 0 0 1rem;
+  padding: 0.8rem 1.3rem;
+  font-size: clamp(1.05rem, 1.9vw, 1.3rem);
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg-elev);
+  border: 1px solid var(--line-strong);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ── 18.7 gallery cards — real project screenshots + live links ──────────── */
+.card--shot { padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+.card--shot > img {
+  display: block;
+  width: 100%;
+  height: 168px;
+  object-fit: cover;
+  object-position: top center;
+  border-bottom: 1px solid var(--line);
+  filter: saturate(1.02);
+}
+.card--shot .card__body { padding: 0.75rem 1.1rem 0.9rem; }
+.card--shot h3 { font-size: 1.12rem; margin: 0 0 0.2em; }
+.card--shot .card__link {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--accent-soft);
+  font-weight: 600;
+  max-width: none;
+}
+/* gallery slide: tighter heading so 2×2 image cards fit the frame */
+.slide--gallery .slide__h { margin-bottom: 0.9rem; }
+.slide--gallery .card-grid--4 { gap: 0.95rem; }
+.reveal .slides > section.slide--gallery[data-layout] { justify-content: center; }
+
+/* ── 18.8 breaks go monumental — read from the back of the room ──────────── */
+.slide--break .kicker {
+  font-size: 1.05rem;
+  letter-spacing: 0.34em;
+}
+.slide--break .break__time {
+  font-size: clamp(5.5rem, 16vw, 12rem);
+  margin: 0.3rem 0 1.6rem;
+}
+.slide--break .break__next { max-width: 64ch; }
+.slide--break .break__next p { font-size: clamp(1.25rem, 2.2vw, 1.6rem); }
+
+/* ── 18.9 bigger QR on the thanks slide ──────────────────────────────────── */
+.qr__frame { width: 282px; height: 282px; }
+.qr__cap { font-size: 1.18rem; max-width: 46ch; }
+
+/* ── 18.5b narrow tip variant on screenshot/compare slides — the window is
+   880px wide and centred, so only a ~200px side margin is free; the note
+   becomes a slim column there instead of covering the caption bar. */
+.slide--screenshot .tip,
+.slide--compare .tip {
+  max-width: 158px;
+  bottom: 3.4rem;
+  padding: 0.6rem 0.85rem 0.7rem;
+}
+.slide--screenshot .tip .tip__text,
+.slide--compare .tip .tip__text { font-size: 0.86rem; }
+
+/* ── 18.11 review fixes: hero promise never breaks mid-phrase ─────────────── */
+.deck-title .accent { white-space: nowrap; }
+
+/* ── 18.12 CLAUDE.md code panel — Hebrew rule lines keep their own direction ─ */
+.concept__visual--code pre,
+.concept__visual--code pre.mono { unicode-bidi: plaintext; }
+
+/* ── 18.13 bonuses readable from the back of the room ────────────────────── */
+.slide--bonuses .card-grid--bonus { gap: 1.2rem; }
+.slide--bonuses .card { padding: 1.7rem 1.6rem; }
+.slide--bonuses .card h3 { font-size: 1.38rem; margin-bottom: 0.4em; }
+.slide--bonuses .card p { font-size: 1.05rem; line-height: 1.55; }
+
+/* ── 18.14 closing questions readable + fill the frame ───────────────────── */
+.slide--closing .lead { font-size: clamp(1.15rem, 2vw, 1.4rem); }
+.slide--closing .q-list { gap: 0.85rem; margin-top: 0.6rem; }
+.slide--closing .q-list li { font-size: clamp(1.2rem, 2.1vw, 1.5rem); }
+.slide--closing .q-list li::before { width: 2rem; height: 2rem; font-size: 0.9rem; }
+.slide--closing .meta { margin-top: 1.4rem; }
+
+/* ── 18.15 gallery: keep the nav arrows off the cards ────────────────────── */
+.card--shot > img { height: 152px; }
+.slide--gallery .card-grid--4 { margin-bottom: 1.2rem; }
+
+/* ── 18.10 entrance choreography for the new section-level children ──────── */
+.reveal .slides > section.slide.present > .learn-list,
+.reveal .slides > section.slide.present > .statement-strip,
+.reveal .slides > section.slide.present > .lead--strong {
+  animation: elemEnter .62s cubic-bezier(.2,.7,.2,1) both;
+}
+.reveal .slides > section.slide.present > .lead--strong { animation-delay: .18s; }
+.reveal .slides > section.slide.present > .statement-strip { animation-delay: .34s; }
+.reveal .slides > section.slide.present > .tip {
+  animation: elemEnter .55s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: .85s;
+}
+
+/* ============================================================================
+   19 · ROUND-7 — ART DIRECTION ("סטודיו-בלופרינט")
+   Hand-drafted line-art motifs float in each slide's negative space, tinted
+   by the chapter's ambient hue via a colored glow. Orbital instrumentation
+   behind chapter numerals, drafting corner-brackets on diagram panels, film
+   grain over the whole deck. Pure additive layer — content never moves.
+   ========================================================================== */
+
+/* ── 19.1 art layer base ──────────────────────────────────────────────────── */
+.slide-art {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 0 26px rgba(var(--amb-rgb), 0.45));
+}
+
+/* hero constellation — fills the calm upper-left sky */
+.slide-art--hero {
+  left: 3%;
+  top: 7%;
+  width: min(30vw, 390px);
+  opacity: 0.2;
+  animation: artBreatheHero 18s ease-in-out infinite;
+}
+@keyframes artBreatheHero {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(1.4deg); }
+}
+
+/* side motif — floats in the empty left band of centred statement slides */
+.slide-art--side {
+  left: clamp(18px, 4vw, 64px);
+  top: 50%;
+  width: min(24vw, 300px);
+  opacity: 0.22;
+  transform: translateY(-50%);
+  animation: artFloatSide 16s ease-in-out infinite;
+}
+.slide-art--soft { opacity: 0.16; }
+@keyframes artFloatSide {
+  0%, 100% { transform: translateY(-50%) rotate(0deg); }
+  50%      { transform: translateY(calc(-50% - 12px)) rotate(-1.2deg); }
+}
+
+/* giant ghost behind centred statements (the question mark) */
+.slide-art--behind {
+  left: 50%;
+  top: 46%;
+  width: 430px;
+  opacity: 0.08;
+  transform: translate(-50%, -50%);
+}
+
+/* corner beams — light raking up from the lower-left */
+.slide-art--corner {
+  left: 10px;
+  bottom: 0;
+  width: 300px;
+  opacity: 0.16;
+}
+
+/* mini constellation — thanks slide corner */
+.slide-art--mini {
+  right: 40px;
+  top: 40px;
+  width: 190px;
+  opacity: 0.2;
+}
+
+/* art fades in after the content lands */
+.reveal .slides > section.slide.present > .slide-art {
+  animation-name: artIn;
+  animation-duration: 1.4s;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+  animation-delay: 0.45s;
+}
+.reveal .slides > section.slide.present > .slide-art--hero   { animation-name: artIn, artBreatheHero; animation-duration: 1.4s, 18s; animation-delay: 0.45s, 0s; animation-iteration-count: 1, infinite; }
+.reveal .slides > section.slide.present > .slide-art--side,
+.reveal .slides > section.slide.present > .slide-art--soft   { animation-name: artIn, artFloatSide; animation-duration: 1.4s, 16s; animation-delay: 0.45s, 0s; animation-iteration-count: 1, infinite; }
+@keyframes artIn { from { opacity: 0; } }
+
+/* ── 19.2 film grain over the whole deck (defined in §9, now actually used) ── */
+
+/* ── 19.3 drafting corner-brackets on every diagram panel ─────────────────── */
+.concept__visual {
+  background-image:
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    linear-gradient(rgba(var(--amb-rgb), 0.6), rgba(var(--amb-rgb), 0.6)),
+    radial-gradient(75% 80% at 50% 30%, rgba(var(--amb-rgb), 0.12), transparent 72%),
+    linear-gradient(165deg, rgba(36, 32, 25, 0.78), rgba(18, 16, 14, 0.7));
+  background-repeat: no-repeat;
+  background-size: 20px 2px, 2px 20px, 20px 2px, 2px 20px, 20px 2px, 2px 20px, 20px 2px, 2px 20px, auto, auto;
+  background-position:
+    top 11px right 11px, top 11px right 11px,
+    top 11px left 11px,  top 11px left 11px,
+    bottom 11px right 11px, bottom 11px right 11px,
+    bottom 11px left 11px,  bottom 11px left 11px,
+    center, center;
+}
+
+/* ── 19.4 editorial heading rule on theory splits (solid right, fades left) ── */
+.slide--concept-visual .slide__h::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 3px;
+  margin-top: 0.45rem;
+  border-radius: 3px;
+  background: linear-gradient(to left, var(--amb), transparent);
+  box-shadow: 0 0 14px -2px rgba(var(--amb-rgb), 0.6);
+}
+
+/* ── 19.5 hero: spotlight pool behind the headline + ornamented names row ──── */
+.slide--title .title__wrap { position: relative; }
+.slide--title .title__wrap::before {
+  content: "";
+  position: absolute;
+  inset: -14% -22%;
+  z-index: -1;
+  background: radial-gradient(48% 44% at 50% 36%, rgba(var(--amb-rgb), 0.15), transparent 70%);
+  pointer-events: none;
+}
+.names-row::before, .names-row::after {
+  content: "✳";
+  font-size: 0.62em;
+  color: var(--accent);
+  opacity: 0.85;
+  margin-inline: 1rem;
+  vertical-align: 0.18em;
+  text-shadow: 0 0 14px rgba(232, 99, 58, 0.6);
+}
+
+/* ── 19.6 micro-craft: numbers, giant statements, learn-list rings ─────────── */
+.slide__h--giant { text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), 0 22px 70px rgba(var(--amb-rgb), 0.28); }
+.learn-list li::before {
+  background: linear-gradient(160deg, rgba(232, 99, 58, 0.28), rgba(242, 193, 78, 0.1));
+  border-color: rgba(232, 99, 58, 0.55);
+}
+
+/* ── 19.7 reduced motion: art freezes, grain stays ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .slide-art,
+  .reveal .slides > section.slide.present > .slide-art {
+    animation: none !important;
+  }
+  .slide-art--behind { transform: translate(-50%, -50%) !important; }
+  .slide-art--side, .slide-art--soft { transform: translateY(-50%) !important; }
+}
+
+/* ============================================================================
+   20 · CLAUDE DESKTOP DECK — additive components
+   "LIVE · דמו חי" badge + dashed "capture-needed" screenshot placeholder.
+   ========================================================================== */
+
+/* ── 20.1 LIVE demo badge — a pulsing coral pill, top-left next to the state
+   badge lane. Sits where slide__badge sits but reads "live", with a soft
+   breathing glow. Use on slides marked LIVE in CONTENT.md. */
+.badge--live {
+  position: absolute;
+  top: 1.3rem;
+  /* offset further left so it can coexist with a slide__badge if present */
+  left: 1.6rem;
+  right: auto;
+  width: max-content;
+  max-width: max-content;
+  z-index: 7;
+  display: inline-flex; align-items: center; gap: 0.55ch;
+  font-family: var(--font-he-body); font-weight: 800;
+  font-size: 0.8rem; letter-spacing: 0.02em; line-height: 1;
+  padding: 0.42rem 0.9rem; border-radius: var(--r-pill);
+  color: #fff;
+  background: linear-gradient(180deg, var(--accent-soft), var(--accent-deep));
+  border: 1px solid rgba(255,255,255,0.22);
+  white-space: nowrap;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 0 30px -8px rgba(232,99,58,0.7),
+    0 8px 22px -14px rgba(0,0,0,0.7);
+}
+.badge--live::before {
+  content: "";
+  width: 0.62rem; height: 0.62rem; border-radius: 50%;
+  flex: none;
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(255,255,255,0.8);
+  animation: livePulse 1.6s ease-out infinite;
+}
+@keyframes livePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.75); }
+  70%  { box-shadow: 0 0 0 0.55rem rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+/* when a state badge is also present, push LIVE down to its own row so they
+   never overlap (state badge keeps the very top-left corner). */
+.slide__badge ~ .badge--live,
+.badge--live ~ .slide__badge { top: 3.05rem; }
+
+/* ── 20.2 capture-needed placeholder — a dashed coral box that marks where a
+   Claude Desktop screenshot will be dropped in later. Lives inside a .shot
+   window (or stands alone). Muted plate, centred bilingual label. */
+.shot-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: clamp(220px, 38vh, 340px);
+  box-sizing: border-box;
+  padding: 1.6rem;
+  text-align: center;
+  border: 2px dashed var(--accent-line);
+  border-radius: var(--r-md);
+  background:
+    repeating-linear-gradient(45deg, transparent 0 16px, rgba(232,99,58,0.04) 16px 17px),
+    var(--bg-elev);
+  color: var(--text-dim);
+}
+.shot-placeholder::before {
+  content: "📷";
+  font-size: 1.6rem;
+  filter: saturate(0.9);
+  opacity: 0.9;
+}
+.shot-placeholder .shot-placeholder__label {
+  font-family: var(--font-he-body);
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--accent-soft);
+  line-height: 1.4;
+}
+.shot-placeholder .shot-placeholder__sub {
+  font-family: var(--font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+/* inside a window frame, drop the dashed box's own radius (the window clips it) */
+.shot__body .shot-placeholder,
+.window-body .shot-placeholder { border-radius: 12px; }
+
+/* ── 20.3 chapter ambient palettes for the Claude Desktop deck's data-parts ──
+   The original deck used open/theory/practice/deploy/closing. This deck splits
+   the journey by surface: open → chat → cowork → code → design → close. Map
+   each to a distinct ambient hue so chapters read as their own colour world. */
+[data-part="chat"]    { --amb:#36C5B0; --amb-rgb:54,197,176;  --amb-2:#E8633A; --amb-2-rgb:232,99,58;  }
+[data-part="cowork"]  { --amb:#F2C14E; --amb-rgb:242,193,78;  --amb-2:#E8633A; --amb-2-rgb:232,99,58;  }
+[data-part="code"]    { --amb:#E8633A; --amb-rgb:232,99,58;   --amb-2:#F2C14E; --amb-2-rgb:242,193,78; }
+[data-part="design"]  { --amb:#8B7CF6; --amb-rgb:139,124,246; --amb-2:#36C5B0; --amb-2-rgb:54,197,176; }
+[data-part="close"]   { --amb:#E8633A; --amb-rgb:232,99,58;   --amb-2:#F2C14E; --amb-2-rgb:242,193,78; }
+
+/* ── 20.4 decision matrix table (S05 "באיזה מצב לבחור?") ───────────────────
+   A clean two-column RTL table: situation on the right, recommended surface
+   on the left, on elevated plates with a coral leading edge per row. */
+.decision-table {
+  width: 100%;
+  margin: 0.6rem 0 0;
+  border-collapse: separate;
+  border-spacing: 0 0.55rem;
+  direction: rtl;
+}
+.decision-table th {
+  text-align: right;
+  font-family: var(--font-he-head);
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--amb);
+  padding: 0 1.2rem 0.2rem;
+}
+.decision-table th:last-child { text-align: left; }
+.decision-table td {
+  background: var(--bg-elev);
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  padding: 0.9rem 1.2rem;
+  font-size: clamp(1.05rem, 1.9vw, 1.35rem);
+  line-height: 1.4;
+  color: var(--text);
+  vertical-align: middle;
+}
+/* first cell (the situation) carries the rounded right edge + coral spine */
+.decision-table td:first-child {
+  border-inline-start: 1px solid var(--line-strong);
+  border-start-start-radius: var(--r-md);
+  border-end-start-radius: var(--r-md);
+  border-inline-end: 4px solid var(--amb);
+  font-weight: 500;
+}
+/* last cell (the surface) is the answer — left-aligned, accented, rounded left */
+.decision-table td:last-child {
+  border-inline-end: 1px solid var(--line-strong);
+  border-start-end-radius: var(--r-md);
+  border-end-end-radius: var(--r-md);
+  text-align: left;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.decision-table td .accent { color: var(--accent); }

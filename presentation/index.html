@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>קורס Claude Desktop — Chat · Co-work · Code</title>
+  <link rel="icon" href="assets/brand-mark.svg" type="image/svg+xml" />
+
+  <!-- fonts: preconnect to the three CDNs the deck pulls type from -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+
+  <!-- Latin display: Clash Display + heavy numerals: Cabinet Grotesk (Fontshare) -->
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@500,700,800,900&display=swap" />
+  <!-- Hebrew (headings + body): Assistant · Latin fallback: Space Grotesk (Google) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" />
+
+  <!-- reveal.js core -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+
+  <!-- deck theme (all styling lives here) -->
+  <link rel="stylesheet" href="theme/deck.css" />
+
+  <!-- code highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ═══ S01 · שער (hero) ═══ -->
+    <section class="slide slide--title" data-part="open" data-layout="hero-low">
+      <img class="slide-art slide-art--hero" src="assets/art/spark-constellation.svg" alt="" aria-hidden="true" />
+      <div class="title__wrap">
+        <img class="brand-mark" src="assets/brand-mark.svg" alt="" />
+        <p class="kicker">סדנה פרונטלית</p>
+        <h1 class="deck-title">איך לחסוך <span class="accent">20–40 שעות בחודש</span> בעזרת סוכני בינה מלאכותית</h1>
+        <p class="lead"><span class="en">Claude Desktop</span> — <span class="en">Chat</span> · <span class="en">Co-work</span> · <span class="en">Code</span></p>
+        <div class="meta meta--names">
+          <span class="names-row">טל מובשוביץ <span class="names-x en">✕</span> עומרי כתב</span>
+        </div>
+      </div>
+      <aside class="notes">
+        השקופית על המסך בכניסה. הבטחה אחת: עד סוף היום כל אחד יודע להפעיל סוכן AI שעובד בשבילו על המחשב שלו.
+      </aside>
+    </section>
+
+    <!-- ═══ S02 · מה זה Claude? ═══ -->
+    <section class="slide slide--concept-visual" data-part="open" data-layout="center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">רגע, מה הדבר הזה</p>
+          <h2 class="slide__h"><span class="en">Claude</span> — הסוכן של <span class="en">Anthropic</span></h2>
+          <ul class="bullets">
+            <li>מודל <span class="en">AI</span> מתקדם.</li>
+            <li>חברת <span class="en">Anthropic</span>, ממוקדת <span class="en">AI</span> בטוח.</li>
+            <li>מה שמייחד אותו — לא רק מדבר, <span class="accent">פועל</span>.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/spark-constellation.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        רקע קצר. לא להיכנס להיסטוריה ארוכה. ה-hype אמיתי כי לראשונה ה-AI לא רק עונה — הוא עושה. זה הגשר לשקופית הבאה.
+      </aside>
+    </section>
+
+    <!-- ═══ S03 · למה זה שונה מצ'אט רגיל? (ה"אהא") ═══ -->
+    <section class="slide slide--compare" data-part="open" data-layout="top">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h">צ'אט <span class="accent">מדבר</span>. <span class="en">Claude</span> <span class="accent">עושה</span>.</h2>
+      <p class="lead">המודל המנטלי הכי חשוב בקורס.</p>
+      <div class="compare">
+        <div class="compare__col compare--no">
+          <h3>צ'אט רגיל (<span class="en">ChatGPT</span>/<span class="en">Gemini</span>)</h3>
+          <ul class="bullets">
+            <li><span class="en">LLM</span> — מודל שפה.</li>
+            <li>עונה, מנסח, מסביר.</li>
+            <li class="accent">אתה מבצע.</li>
+          </ul>
+        </div>
+        <div class="compare__col compare--yes">
+          <h3><span class="en">Claude Desktop</span></h3>
+          <ul class="bullets">
+            <li>סוכן עם <span class="accent">ידיים במחשב שלך</span>.</li>
+            <li>קורא קבצים, כותב, מריץ, מתחבר לכלים.</li>
+            <li class="accent">מבצע בשבילך.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="statement-strip">זה ההבדל. כל השאר הוא פירוט.</p>
+      <aside class="notes">
+        זו השקופית הכי חשובה. לתת דוגמה: "תסכם לי 50 מיילים" — צ'אט יסביר איך; Claude ייכנס למייל ויעשה. לוודא שכולם קולטים את ההבדל לפני שממשיכים.
+      </aside>
+    </section>
+
+    <!-- ═══ S04 · מפת היום — 4 המשטחים ═══ -->
+    <section class="slide slide--outcomes" data-part="open" data-layout="top">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h"><span class="en">Chat</span> → <span class="en">Co-work</span> → <span class="en">Code</span> <em>(+ נגיעת <span class="en">Design</span>)</em></h2>
+      <p class="lead">עוצמה ואוטונומיה עולות משלב לשלב.</p>
+      <div class="card-grid">
+        <article class="card">
+          <h3><span class="en">Chat</span></h3>
+          <p>לשאול, לחשוב, ליצור. עוזר חכם.</p>
+        </article>
+        <article class="card">
+          <h3><span class="en">Co-work</span></h3>
+          <p>עוזר אישי שמבצע משימות על הקבצים שלך.</p>
+        </article>
+        <article class="card">
+          <h3><span class="en">Code</span></h3>
+          <p>סוכן אוטונומי מקצה-לקצה. הרמה הגבוהה ביותר.</p>
+        </article>
+      </div>
+      <aside class="notes">
+        מסגרת ליום. כל אחד נלמד עם הסבר ← דוגמה חיה. נתחיל קל ונעלה.
+      </aside>
+    </section>
+
+    <!-- ═══ S05 · מתי משתמשים במה (מטריצת החלטה) ═══ -->
+    <section class="slide slide--concept" data-part="open" data-layout="center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept">
+        <div class="concept__body">
+          <p class="kicker">השאלה שכולם שואלים</p>
+          <h2 class="slide__h">באיזה מצב לבחור?</h2>
+          <table class="decision-table">
+            <thead>
+              <tr><th>המצב</th><th>המשטח</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>שאלה / רעיון / טיוטה מהירה</td>
+                <td><span class="accent en">Chat</span></td>
+              </tr>
+              <tr>
+                <td>לעבד קבצים ותיקיות אצלי במחשב, משימה תחומה</td>
+                <td><span class="accent en">Co-work</span></td>
+              </tr>
+              <tr>
+                <td>פרויקט מקצה-לקצה, כמה שלבים, אוטומציה</td>
+                <td><span class="accent en">Code</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <aside class="notes">
+        להחזיר לשקופית הזו לאורך היום. כלל אצבע: ככל שהמשימה ארוכה ואוטונומית יותר — עולים בסולם.
+      </aside>
+    </section>
+
+    <!-- ═══ S06 · Chat — מה זה ומתי ═══ -->
+    <section class="slide slide--concept-visual" data-part="chat" data-layout="flip">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">המשטח הראשון</p>
+          <h2 class="slide__h"><span class="en">Chat</span> — העוזר החכם</h2>
+          <ul class="bullets">
+            <li>שיחה, מחקר, ניסוח, סיעור מוחין.</li>
+            <li><span class="en">Artifacts</span> — פלט ויזואלי/מסמך חי בצד.</li>
+            <li><span class="en">Projects</span> — ידע קבוע לשיחה.</li>
+            <li><span class="en">Memory</span> — <span class="en">Claude</span> זוכר העדפות.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/bubbles.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        זה המוכר. הדגש: גם פה זה לא סתם צ'אט — יש Artifacts, Projects, Memory.
+      </aside>
+    </section>
+
+    <!-- ═══ S07 · Chat — דוגמאות (לבעל עסק) ═══ -->
+    <section class="slide slide--outcomes" data-part="chat" data-layout="top">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h"><span class="en">Chat</span> — דוגמאות לבעל עסק</h2>
+      <div class="card-grid card-grid--4">
+        <article class="card"><h3>הצעת מחיר / מייל</h3><p>לנסח הצעת מחיר או מייל ללקוח.</p></article>
+        <article class="card"><h3>סיכום מסמך</h3><p>לסכם מסמך או חוזה.</p></article>
+        <article class="card"><h3>סיעור רעיונות</h3><p>לסיעור רעיונות לפוסט.</p></article>
+        <article class="card"><h3>נקודות → טקסט</h3><p>להפוך רשימת נקודות לטקסט מסודר.</p></article>
+      </div>
+      <aside class="notes">
+        דוגמאות מהעולם שלהם. לשאול את הקהל מה הם היו שואלים.
+      </aside>
+    </section>
+
+    <!-- ═══ S08 · Chat — דמו חי LIVE ═══ -->
+    <section class="slide slide--concept center-text" data-part="chat" data-layout="statement">
+      <span class="badge--live">LIVE · דמו חי</span>
+      <img class="slide-art slide-art--side" src="assets/art/spark-constellation.svg" alt="" aria-hidden="true" />
+      <div class="concept">
+        <div class="concept__body">
+          <p class="kicker">כולם יחד, על המחשב</p>
+          <h2 class="slide__h slide__h--giant">התרגיל הראשון</h2>
+          <p class="lead">כל אחד פותח <span class="en">Chat</span> ומבקש לנסח מייל מקצועי ללקוח על בסיס 3 נקודות. אז מבקש <span class="en">Artifact</span> שמסדר את זה יפה.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        לוודא שלכולם עובד. מי שנתקע — עוזרים. זה ה-warmup.
+      </aside>
+    </section>
+
+    <!-- ═══ S09 · Co-work — העוזר האישי שמבצע ═══ -->
+    <section class="slide slide--concept-visual" data-part="cowork" data-layout="center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">המשטח השני</p>
+          <h2 class="slide__h"><span class="en">Co-work</span> — מבצע על הקבצים שלך</h2>
+          <ul class="bullets">
+            <li>פוקוס: <span class="accent">תהליכי עבודה לוקאליים</span>.</li>
+            <li>מתחבר ל<span class="accent">תיקיות והקבצים</span> שלך.</li>
+            <li>יוצר <span class="accent en">New Task</span> ותופר משימה מסודרת.</li>
+            <li>עובד גם לוקאלי וגם מול הרשת — לא רק לוקאלי.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/checklist.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        הדגש על "New Task" — Co-work תופר משימה, יודע סדר וארגון. עובד בתוך המחשב על הקבצים שלך.
+      </aside>
+    </section>
+
+    <!-- ═══ S10 · Co-work — מתי ודוגמאות ═══ -->
+    <section class="slide slide--outcomes" data-part="cowork" data-layout="top">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h"><span class="en">Co-work</span> — מתי ודוגמאות</h2>
+      <div class="card-grid card-grid--4">
+        <article class="card"><h3>לארגן תיקייה</h3><p>לארגן תיקיית מסמכים מבולגנת.</p></article>
+        <article class="card"><h3>טבלה מ-PDF</h3><p>להוציא טבלה מ-<span class="en">PDF</span>-ים.</p></article>
+        <article class="card"><h3>לסכם קבצים</h3><p>לעבור על קבצים ולסכם.</p></article>
+        <article class="card"><h3>חבילה ללקוח</h3><p>להכין חבילת מסמכים ללקוח.</p></article>
+      </div>
+      <aside class="tip"><span class="tip__label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a6 6 0 0 0-3.4 10.9c.6.4 1 1.1 1 1.9v.7h4.8v-.7c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 4Z"/><path d="M10 20h4M10.8 22h2.4"/><path d="M12 1v1.4M5.2 5.2l1 1M18.8 5.2l-1 1M2.5 12H4M20 12h1.5"/></svg> בטיחות</span><span class="tip__text">לפני חיבור <span class="accent en">connectors</span> — לבצע <span class="accent">גיבוי מלא</span>.</span></aside>
+      <aside class="notes">
+        גיבוי לפני connectors זו נקודה שעומרי הדגיש. להסביר למה: סוכן עם גישה לכלים יכול לשנות הרבה.
+      </aside>
+    </section>
+
+    <!-- ═══ S11 · Co-work — דמו חי LIVE ═══ -->
+    <section class="slide slide--concept center-text" data-part="cowork" data-layout="statement">
+      <span class="badge--live">LIVE · דמו חי</span>
+      <img class="slide-art slide-art--side" src="assets/art/checklist.svg" alt="" aria-hidden="true" />
+      <div class="concept">
+        <div class="concept__body">
+          <p class="kicker">דמו חי</p>
+          <h2 class="slide__h slide__h--giant">מצביעים על תיקייה אמיתית</h2>
+          <p class="lead">כל אחד מצביע <span class="en">Co-work</span> על תיקייה אמיתית (מסמכים/הורדות) ומבקש: <span class="accent">"ארגן לי את התיקייה הזו לתתי-תיקיות לפי נושא, ותכין לי טבלת תוכן"</span>. רואים את ה-<span class="en">New Task</span> נבנה.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        רגע ה-wow — רואים את הסוכן עובד על הקבצים שלהם. לוודא שעובדים על תיקייה לא קריטית (בגלל הגיבוי).
+      </aside>
+    </section>
+
+    <!-- ═══ S12 · Code — הרמה הגבוהה ביותר ═══ -->
+    <section class="slide slide--concept-visual" data-part="code" data-layout="flip">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">המשטח השלישי, הליבה</p>
+          <h2 class="slide__h"><span class="en">Code</span> — סוכן אוטונומי מקצה-לקצה</h2>
+          <ul class="bullets">
+            <li>כותב, מריץ, מתקן, פורס.</li>
+            <li>עובד <span class="accent">לוקאלית</span> וגם ב<span class="accent">חיבור מרוחק (remote)</span>.</li>
+            <li>מבצע תהליכים שלמים בעצמו.</li>
+            <li>גם בלי לדעת קוד — אתה מנהל, הוא מבצע.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/ascent.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        להרגיע את הקהל הלא-טכני: "Code" לא אומר שאתם כותבים קוד. אתם מנהלים סוכן שכותב. אתם המנהל.
+      </aside>
+    </section>
+
+    <!-- ═══ S13 · Plan Mode — לתכנן לפני שבונים ═══ -->
+    <section class="slide slide--screenshot" data-part="code" data-layout="shot-center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h"><span class="en">Plan Mode</span> — ארכיטקט שכותב תוכנית</h2>
+      <p class="lead">לפני ביצוע — <span class="en">Claude</span> חוקר ומתכנן, כותב תוכנית מדויקת (גם כקובץ <span class="en">MD</span>). אתה מאשר לפני שהוא נוגע במשהו — ורק אחרי אישור הוא בונה.</p>
+      <figure class="shot" data-capture="plan-mode">
+        <div class="shot__chrome"><span></span><span></span><span></span></div>
+        <div class="shot__body shot__body--img">
+          <div class="shot-placeholder">
+            <span class="shot-placeholder__label">מסך <span class="en">Plan Mode</span> + כפתור אישור</span>
+            <span class="shot-placeholder__sub">צילום מסך — capture-needed · ⚠️ לאמת חי</span>
+          </div>
+        </div>
+      </figure>
+      <aside class="notes">
+        זה בדיוק מה שעשינו כדי לבנות את הקורס הזה. תכנון לפני ביצוע = פחות טעויות. להראות את מסך ה-Plan + כפתור האישור. ⚠️ לאמת חי את מסך Plan Mode ב-Desktop.
+      </aside>
+    </section>
+
+    <!-- ═══ S14 · MCP & Connectors — לחבר כלים ═══ -->
+    <section class="slide slide--screenshot" data-part="code" data-layout="shot-center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h"><span class="en">MCP</span> — חיבור לכלים חיצוניים</h2>
+      <p class="lead"><span class="en">Connectors</span> מובנים בקליק (<span class="en">Notion</span>, <span class="en">Drive</span>, <span class="en">Calendar</span>…). אין connector? <span class="en">MCP</span> רשמי מותאם, או <span class="en">CLI</span> (למשל <span class="en">GitHub</span> דרך <code class="mono" dir="ltr">gh</code>). החיבור נשמר — מתחברים פעם אחת.</p>
+      <figure class="shot" data-capture="connectors">
+        <div class="shot__chrome"><span></span><span></span><span></span></div>
+        <div class="shot__body shot__body--img">
+          <div class="shot-placeholder">
+            <span class="shot-placeholder__label">מסך ה-<span class="en">connectors</span></span>
+            <span class="shot-placeholder__sub">צילום מסך — capture-needed · ⚠️ לאמת חי</span>
+          </div>
+        </div>
+      </figure>
+      <aside class="tip"><span class="tip__label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a6 6 0 0 0-3.4 10.9c.6.4 1 1.1 1 1.9v.7h4.8v-.7c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 4Z"/><path d="M10 20h4M10.8 22h2.4"/><path d="M12 1v1.4M5.2 5.2l1 1M18.8 5.2l-1 1M2.5 12H4M20 12h1.5"/></svg> בטיחות</span><span class="tip__text"><span class="accent">גיבוי</span> לפני חיבור.</span></aside>
+      <aside class="notes">
+        דמו: לפתוח את רשימת ה-connectors, לחבר אחד. להסביר שכשאין — יש MCP רשמי/CLI. דוגמת GitHub: אין connector מובנה אבל gh עובד. ⚠️ לאמת חי את מסך ה-connectors.
+      </aside>
+    </section>
+
+    <!-- ═══ S15 · MCP — דמו חי LIVE ═══ -->
+    <section class="slide slide--concept center-text" data-part="code" data-layout="statement">
+      <span class="badge--live">LIVE · דמו חי</span>
+      <img class="slide-art slide-art--side" src="assets/art/community.svg" alt="" aria-hidden="true" />
+      <div class="concept">
+        <div class="concept__body">
+          <p class="kicker">דמו חי</p>
+          <h2 class="slide__h slide__h--giant">מחברים <span class="en">connector</span> אחד יחד</h2>
+          <p class="lead">לחבר <span class="en">connector</span> אחד יחד (למשל <span class="en">Google Calendar</span>/<span class="en">Drive</span>), ולבקש מ-<span class="en">Claude</span> לעשות איתו משהו פשוט.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        לוודא שכולם רואים את החיבור. מי שאין לו — מסתכל על המסך הראשי.
+      </aside>
+    </section>
+
+    <!-- ═══ S16 · Multi-Agents — סוכן שמפעיל סוכנים LIVE (קצר) ═══ -->
+    <section class="slide slide--concept-visual" data-part="code" data-layout="center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <span class="badge--live">LIVE · דמו חי</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">מתי משימה גדולה מדי לסוכן אחד</p>
+          <h2 class="slide__h">סוכן ראשי, כמה סאב-סוכנים</h2>
+          <ul class="bullets">
+            <li>משימה גדולה מתפצלת לכמה סוכנים שעובדים במקביל.</li>
+            <li>כל אחד על חלק משלו.</li>
+            <li>הראשי מאחד.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/community.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        מקטע קצר. דמו זריז: לבקש משימה שמפצלת לסוכנים. לא להעמיק — רק שיבינו שזה קיים ומתי שימושי. קיים ב-Desktop Code.
+      </aside>
+    </section>
+
+    <!-- ═══ S17 · Hooks — אוטומציה על אירועים LIVE ═══ -->
+    <section class="slide slide--concept-visual" data-part="code" data-layout="flip">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <span class="badge--live">LIVE · דמו חי</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">ש-Claude יגיב לאירועים לבד</p>
+          <h2 class="slide__h"><span class="en">Hooks</span> — טריגר אוטומטי</h2>
+          <ul class="bullets">
+            <li>קוד שרץ אוטומטית באירוע (תחילת/סיום עבודה).</li>
+            <li>דוגמה: <span class="accent">צליל כשהסוכן מסיים</span> — שתדע בלי לשבת ולבהות.</li>
+            <li>מוגדר בקובץ <code class="mono" dir="ltr">settings.json</code>.</li>
+          </ul>
+          <p class="statement-strip">ב-<span class="en">Desktop</span> פקודת <code class="mono" dir="ltr">/hooks</code> לא נפתחת — מגדירים ע"י עריכת <code class="mono" dir="ltr">settings.json</code>.</p>
+        </div>
+        <div class="concept__visual">
+          <div class="shot-placeholder">
+            <span class="shot-placeholder__label"><span class="en">Stop hook</span> משמיע צליל</span>
+            <span class="shot-placeholder__sub">צילום מסך — capture-needed · ⚠️ לאמת חי</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        דמו חי — להטמיע hook שמשמיע צליל ב-Stop. עומרי רוצה את זה בדיוק. ⚠️ לאמת חי שה-Stop hook עובד ומשמיע צליל ב-Desktop.
+      </aside>
+    </section>
+
+    <!-- ═══ S18 · Slash Commands — פקודות מהירות ═══ -->
+    <section class="slide slide--concept" data-part="code" data-layout="center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept">
+        <div class="concept__body">
+          <p class="kicker">קיצורי דרך</p>
+          <h2 class="slide__h">פקודות <code class="mono" dir="ltr">/</code></h2>
+          <ul class="bullets bullets--lg">
+            <li><code class="mono" dir="ltr">/usage</code> — לראות כמה שימוש ניצלת.</li>
+            <li><code class="mono" dir="ltr">/compact</code> — לכווץ שיחה ארוכה.</li>
+            <li><code class="mono" dir="ltr">/context</code> — מצב ההקשר.</li>
+            <li><code class="mono" dir="ltr">/init</code> — להקים קובץ פרויקט.</li>
+          </ul>
+          <p class="statement-strip">⚠️ חלק מהפקודות (<code class="mono" dir="ltr">/permissions</code>, <code class="mono" dir="ltr">/config</code>, <code class="mono" dir="ltr">/agents</code>, <code class="mono" dir="ltr">/hooks</code>, <code class="mono" dir="ltr">/doctor</code>) פתוחות רק בטרמינל ולא באפליקציית <span class="en">Desktop</span>. לאמת חי אילו <code class="mono" dir="ltr">/</code> עובדות ב-<span class="en">Desktop</span>.</p>
+        </div>
+      </div>
+      <aside class="notes">
+        להראות /usage חי אם עובד. אם פקודה לא קיימת ב-Desktop — להגיד מפורש.
+      </aside>
+    </section>
+
+    <!-- ═══ S19 · Models — מי מתי ═══ -->
+    <section class="slide slide--outcomes" data-part="code" data-layout="top">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h"><span class="en">Opus</span> · <span class="en">Sonnet</span> · <span class="en">Haiku</span> · <span class="en">Fable 5</span></h2>
+      <p class="lead">לבחור את המוח הנכון.</p>
+      <div class="card-grid card-grid--4">
+        <article class="card">
+          <h3><span class="en">Opus 4.8</span></h3>
+          <p>החזק והחכם ביותר. למשימות מורכבות.</p>
+        </article>
+        <article class="card">
+          <h3><span class="en">Sonnet 4.6</span></h3>
+          <p>המאוזן ליום-יום. הכי טוב ל-<span class="en">everyday tasks</span>.</p>
+        </article>
+        <article class="card">
+          <h3><span class="en">Haiku 4.5</span></h3>
+          <p>הזול והמהיר ביותר. למשימות קלות ומהירות.</p>
+        </article>
+        <article class="card">
+          <h3><span class="en">Fable 5</span></h3>
+          <p>מודל <span class="en">frontier</span> מתקדם.</p>
+        </article>
+      </div>
+      <aside class="notes">
+        התיקון שעומרי ביקש: Sonnet הוא לא הזול — Haiku כן. Sonnet מאוזן. לא להגיד שום דבר על ארה"ב וחסימה לגבי Fable 5.
+      </aside>
+    </section>
+
+    <!-- ═══ S20 · Effort & Fast Mode ═══ -->
+    <section class="slide slide--concept-visual" data-part="code" data-layout="flip">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">כמה "לחשוב"</p>
+          <h2 class="slide__h"><span class="en">Effort</span> + <span class="en">Fast</span></h2>
+          <ul class="bullets">
+            <li><span class="accent en">Effort</span> — כמה עומק מחשבה (<span class="en">low → max</span>). יותר <span class="en">effort</span> = יותר טוב ויותר איטי/יקר.</li>
+            <li><span class="accent en">Fast mode</span> (<code class="mono" dir="ltr">/fast</code>) — <span class="en">Opus</span> עם פלט מהיר, <span class="accent">לא</span> הורדת מודל.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <div class="shot-placeholder">
+            <span class="shot-placeholder__label">בורר ה-<span class="en">effort</span> ב-<span class="en">UI</span></span>
+            <span class="shot-placeholder__sub">צילום מסך — capture-needed · ⚠️ לאמת חי</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        ⚠️ לאמת חי שבורר ה-effort חשוף ב-UI של Desktop. Fast mode קיים. אם effort לא חשוף — להציג כמושג בלי בורר.
+      </aside>
+    </section>
+
+    <!-- ═══ S21 · Permissions — שליטה ובטיחות ═══ -->
+    <section class="slide slide--concept-visual" data-part="code" data-layout="center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">מי מאשר מה</p>
+          <h2 class="slide__h"><span class="en">Permissions</span></h2>
+          <ul class="bullets">
+            <li><span class="en">Claude</span> מבקש אישור לפעולות רגישות.</li>
+            <li>מצבי הרשאה שונים.</li>
+            <li>אתה בשליטה — כלום לא קורה בלי ידיעתך.</li>
+          </ul>
+          <p class="statement-strip">⚠️ <code class="mono" dir="ltr">/permissions</code> <span class="en">UI</span> = טרמינל בלבד. ב-<span class="en">Desktop</span> ההרשאות דרך בקשות האישור/הגדרות.</p>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/checklist.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        ⚠️ /permissions UI = טרמינל בלבד. ב-Desktop ההרשאות דרך בקשות האישור/הגדרות. להציג את הרעיון, לא את פקודת הטרמינל.
+      </aside>
+    </section>
+
+    <!-- ═══ S22 · Plugins — נגיעה קלה ═══ -->
+    <section class="slide slide--concept-visual" data-part="code" data-layout="flip">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">לארוז ולשתף</p>
+          <h2 class="slide__h"><span class="en">Skill</span> = יחידה · <span class="en">Plugin</span> = אריזה</h2>
+          <ul class="bullets">
+            <li><span class="en">skill</span> — יכולת בודדת.</li>
+            <li><span class="en">plugin</span> — חבילה שאורזת כמה <span class="en">skills</span>/<span class="en">commands</span>/<span class="en">agents</span> יחד.</li>
+            <li>רלוונטי כשרוצים <span class="accent">לשתף ולהפיץ</span>.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/ascent.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        נגיעה בלבד כבקשת עומרי. רוב הקהל ישתמש ב-skills בודדים. plugin = למי שמפיץ.
+      </aside>
+    </section>
+
+    <!-- ═══ S23 · בטיחות & עלות ═══ -->
+    <section class="slide slide--outcomes" data-part="code" data-layout="top">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h">3 כללי זהב</h2>
+      <p class="lead">לפני שמשחררים סוכן.</p>
+      <div class="card-grid">
+        <article class="card">
+          <h3>אין סודות בצ'אט</h3>
+          <p>לא להדביק <span class="en">API keys</span>/סיסמאות — <span class="en">env var</span> בלבד.</p>
+        </article>
+        <article class="card">
+          <h3>גיבוי תמיד</h3>
+          <p>גיבוי לפני <span class="en">connectors</span>/פעולות גדולות.</p>
+        </article>
+        <article class="card">
+          <h3>מודעות עלות</h3>
+          <p>מנוי/<span class="en">API</span> נצרכים — לשים לב לעלות.</p>
+        </article>
+      </div>
+      <aside class="notes">
+        קצר אבל חשוב. בעלי עסק צריכים את זה. סיפור קצר על מפתח שדלף.
+      </aside>
+    </section>
+
+    <!-- ═══ S24 · עבודה עצמית — הפרויקט שלך LIVE ═══ -->
+    <section class="slide slide--concept center-text" data-part="code" data-layout="statement">
+      <span class="badge--live">LIVE · דמו חי</span>
+      <img class="slide-art slide-art--corner" src="assets/art/beams.svg" alt="" aria-hidden="true" />
+      <div class="concept">
+        <div class="concept__body">
+          <p class="kicker">עכשיו אתם</p>
+          <h2 class="slide__h slide__h--giant">כל אחד, רעיון משלו</h2>
+          <ul class="bullets bullets--xl">
+            <li>1) רעיון.</li>
+            <li>2) <span class="accent en">Plan Mode</span> — תכנון.</li>
+            <li>3) <span class="accent">אישור</span> התוכנית.</li>
+            <li>4) הסוכן בונה.</li>
+            <li>5) <span class="accent">הפסקת רבע שעה</span> בזמן שהוא עובד.</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="notes">
+        זה השיא. כל אחד מביא רעיון. תכנון קודם, אישור, ואז משחררים והולכים להפסקה בזמן שהמודל עובד. חוזרים לתוצאה.
+      </aside>
+    </section>
+
+    <!-- ═══ S25 · Claude Routines — אוטומציות שרצות לבד LIVE ═══ -->
+    <section class="slide slide--screenshot" data-part="code" data-layout="shot-center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <span class="badge--live">LIVE · דמו חי</span>
+      <h2 class="slide__h"><span class="en">Routines</span> — אוטומציה מתוזמנת</h2>
+      <p class="lead">משימות שרצות לפי לו"ז (<span class="en">cron</span>), לוקאלי או בענן (<span class="en">remote/cloud</span>). דוגמה: סיכום יומי, מעקב לידים, דוח שבועי שמגיע לבד.</p>
+      <figure class="shot" data-capture="routine">
+        <div class="shot__chrome"><span></span><span></span><span></span></div>
+        <div class="shot__body shot__body--img">
+          <div class="shot-placeholder">
+            <span class="shot-placeholder__label">יצירת <span class="en">routine</span> ב-<span class="en">Desktop</span></span>
+            <span class="shot-placeholder__sub">צילום מסך — capture-needed · ⚠️ לאמת חי</span>
+          </div>
+        </div>
+      </figure>
+      <aside class="notes">
+        דמו חי — ליצור routine פשוט (למשל סיכום יומי). להסביר local מול cloud. ⚠️ לאמת חי את ה-UI/פקודת היצירה של routine ב-Desktop.
+      </aside>
+    </section>
+
+    <!-- ═══ S26 · Design ב-Claude ═══ -->
+    <section class="slide slide--concept-visual" data-part="design" data-layout="flip">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <div class="concept concept--split">
+        <div class="concept__body">
+          <p class="kicker">ויזואל</p>
+          <h2 class="slide__h">ליצור ויזואלים עם <span class="en">Claude</span></h2>
+          <ul class="bullets">
+            <li><span class="en">Claude</span> יודע לייצר ולעצב ויזואלים.</li>
+            <li><span class="en">Artifacts</span> ויזואליים בצ'אט.</li>
+            <li>⚠️ "<span class="en">Claude Design</span>" כמצב נפרד — לאמת; אם לא קיים, להציג כיכולת עיצוב/<span class="en">artifacts</span> ולא כמצב.</li>
+          </ul>
+        </div>
+        <div class="concept__visual">
+          <img src="assets/art/spark-constellation.svg" alt="" aria-hidden="true" />
+        </div>
+      </div>
+      <aside class="notes">
+        נגיעה. אם אין מצב בשם "Claude Design" — להגיד מפורש שאין, ולהראות מה כן יש (יצירת ויזואל/artifacts).
+      </aside>
+    </section>
+
+    <!-- ═══ S27 · חבילת הבונוס ═══ -->
+    <section class="slide slide--bonuses" data-part="close" data-layout="top">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h">כל מה שצריך כדי להמשיך</h2>
+      <p class="lead">לוקחים הביתה.</p>
+      <div class="card-grid card-grid--bonus">
+        <article class="card"><h3>30 סקילים</h3><p>מוכנים להטמעה (15 + 15).</p></article>
+        <article class="card"><h3>חבילת פונטים</h3><p>הפונטים של המותג, מוכנים לשימוש.</p></article>
+        <article class="card"><h3><span class="en">Prompt Pack</span></h3><p>אוסף פרומפטים מוכנים.</p></article>
+        <article class="card"><h3><span class="en">Cheat-sheet</span></h3><p>דף קיצורים מהיר.</p></article>
+        <article class="card"><h3>מדריך התקנה</h3><p>צעד-אחר-צעד.</p></article>
+        <article class="card"><h3>לינק <span class="en">GitHub</span></h3><p>מדביקים ויורד הכול.</p></article>
+      </div>
+      <aside class="notes">
+        להראות את ה-repo/Pages. להסביר איך מתקינים skill.
+      </aside>
+    </section>
+
+    <!-- ═══ S28 · איך מתקינים skill ═══ -->
+    <section class="slide slide--screenshot" data-part="close" data-layout="shot-center">
+      <span class="slide__badge slide__badge--info">הסבר</span>
+      <h2 class="slide__h">איך מתקינים <span class="en">skill</span> — 3 צעדים</h2>
+      <p class="lead">1) מורידים את החבילה · 2) שמים בתיקיית ה-<span class="en">skills</span> · 3) <span class="en">Claude</span> מזהה ומשתמש כשרלוונטי.</p>
+      <figure class="shot" data-capture="install-skill">
+        <div class="shot__chrome"><span></span><span></span><span></span></div>
+        <div class="shot__body shot__body--img">
+          <div class="shot-placeholder">
+            <span class="shot-placeholder__label">נתיב/דרך התקנת <span class="en">skill</span> ב-<span class="en">Desktop</span></span>
+            <span class="shot-placeholder__sub">צילום מסך — capture-needed · ⚠️ לאמת חי</span>
+          </div>
+        </div>
+      </figure>
+      <aside class="notes">
+        קצר ופרקטי. ⚠️ לאמת חי את נתיב/דרך התקנת skill ב-Desktop.
+      </aside>
+    </section>
+
+    <!-- ═══ S29 · תודה ═══ -->
+    <section class="slide slide--thanks" data-part="close">
+      <img class="slide-art slide-art--mini" src="assets/art/trophy.svg" alt="" aria-hidden="true" />
+      <p class="kicker">נתראה בקהילה</p>
+      <h2 class="thanks__title">עכשיו תורכם לחסוך <span class="accent">20–40 שעות בחודש</span></h2>
+      <p class="thanks__lead">טל מובשוביץ <span class="names-x en">✕</span> עומרי כתב</p>
+      <aside class="notes">
+        סגירה. פרטי קשר/המשך ליווי.
+      </aside>
+    </section>
+
+  </div><!-- /.slides -->
+</div><!-- /.reveal -->
+<div class="grain-overlay" aria-hidden="true"></div>
+
+<!-- reveal.js core + plugins -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+
+<script>
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    hash: true,
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    slideNumber: 'c/t',
+    showSlideNumber: 'all',
+    plugins: [ RevealNotes, RevealHighlight ]
+  });
+</script>
+
+</body>
+</html>

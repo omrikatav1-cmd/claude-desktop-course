@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדריך התקנה — Claude Desktop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0D0C; --bg-elev:#1A1816; --bg-elev-2:#242019; --line:#322C26;
+    --accent:#E8633A; --accent-soft:#F0875F; --accent-deep:#C24A26; --accent-2:#F2C14E;
+    --text:#F5EFE8; --text-dim:#B8AEA3; --text-faint:#7C736A;
+    --r-sm:10px; --r-md:16px; --r-lg:26px; --r-pill:999px;
+    --shadow-accent:0 18px 50px -12px rgba(232,99,58,.35);
+    --font-he:"Assistant",system-ui,sans-serif; --font-d:"Space Grotesk",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{direction:rtl}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text);line-height:1.65;
+    background-image:radial-gradient(120% 80% at 90% -10%,rgba(232,99,58,.14),transparent 60%);
+    background-attachment:fixed;min-height:100vh}
+  .wrap{max-width:780px;margin-inline:auto;padding:48px 22px 80px}
+  header{text-align:center;margin-bottom:54px}
+  .badge{display:inline-block;font-family:var(--font-d);font-size:.78rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent);border:1px solid var(--line);border-radius:var(--r-pill);
+    padding:6px 16px;margin-bottom:22px}
+  h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:14px}
+  h1 .latin{font-family:var(--font-d)}
+  .sub{color:var(--text-dim);font-size:1.1rem;max-width:48ch;margin-inline:auto}
+  .step{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:28px 26px;margin-bottom:24px;box-shadow:0 12px 40px -16px rgba(0,0,0,.6)}
+  .step-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+  .num{flex:none;width:42px;height:42px;border-radius:var(--r-pill);background:var(--accent);
+    color:var(--bg);font-family:var(--font-d);font-weight:700;font-size:1.15rem;
+    display:grid;place-items:center;box-shadow:var(--shadow-accent)}
+  .step h2{font-size:1.3rem;font-weight:700}
+  .step p{color:var(--text-dim);margin-bottom:10px}
+  .step ul{list-style:none;margin:10px 0 4px}
+  .step li{position:relative;padding-inline-start:22px;margin-bottom:7px;color:var(--text-dim)}
+  .step li::before{content:"›";position:absolute;inset-inline-start:0;color:var(--accent);font-weight:700}
+  .step b{color:var(--text)}
+  a.inline{color:var(--accent-soft);text-decoration:none;border-bottom:1px solid var(--line)}
+  a.inline:hover{border-color:var(--accent)}
+  .shot-placeholder{border:2px dashed var(--accent);border-radius:var(--r-md);
+    background:repeating-linear-gradient(135deg,rgba(232,99,58,.05) 0 12px,transparent 12px 24px);
+    color:var(--accent-soft);text-align:center;padding:30px 16px;margin-top:16px;
+    font-family:var(--font-d);font-size:.92rem;letter-spacing:.04em}
+  .shot-placeholder span{display:block;color:var(--text-faint);font-family:var(--font-he);
+    font-size:.82rem;letter-spacing:0;margin-top:6px}
+  .note{background:var(--bg-elev-2);border-inline-start:3px solid var(--accent-2);
+    border-radius:var(--r-sm);padding:14px 16px;color:var(--text-dim);font-size:.95rem;margin-top:14px}
+  .cta{display:block;text-align:center;background:var(--accent);color:var(--bg);font-weight:700;
+    font-size:1.05rem;text-decoration:none;border-radius:var(--r-pill);padding:16px 24px;
+    margin-top:8px;box-shadow:var(--shadow-accent);transition:background .15s}
+  .cta:hover{background:var(--accent-soft)}
+  footer{text-align:center;color:var(--text-faint);font-size:.85rem;margin-top:50px}
+  .num-ltr{direction:ltr;display:inline-block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">Claude Desktop · מדריך התקנה</span>
+    <h1>מתקינים <span class="latin">Claude Desktop</span><br>בחמישה צעדים</h1>
+    <p class="sub">מההורדה ועד השיחה הראשונה. בלי ידע טכני — רק עוקבים אחרי הצעדים.</p>
+  </header>
+
+  <div class="step">
+    <div class="step-head"><div class="num">1</div><h2>הורדת האפליקציה</h2></div>
+    <p>היכנסו לאתר הרשמי והורידו את הגרסה למחשב שלכם (<b>Mac</b> או <b>Windows</b>).</p>
+    <ul>
+      <li>גלשו ל-<a class="inline" href="https://claude.ai/download" target="_blank" rel="noopener"><span dir="ltr">claude.ai/download</span></a></li>
+      <li>האתר מזהה את סוג המחשב לבד ומציע את הקובץ הנכון</li>
+      <li>לחצו <b>Download</b> ושמרו את הקובץ</li>
+    </ul>
+    <div class="shot-placeholder">צילום מסך — capture-needed
+      <span>עמוד ההורדה עם כפתור Download מודגש</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">2</div><h2>התקנה במחשב</h2></div>
+    <p>פותחים את הקובץ שהורד ומתקינים — בדיוק כמו כל אפליקציה.</p>
+    <ul>
+      <li><b>Mac:</b> פתחו את קובץ ה-<span dir="ltr">.dmg</span> וגררו את <b>Claude</b> לתיקיית <span dir="ltr">Applications</span></li>
+      <li><b>Windows:</b> הריצו את קובץ ה-<span dir="ltr">.exe</span> ואשרו את ההתקנה</li>
+      <li>פתחו את האפליקציה מתפריט ההתחלה / Launchpad</li>
+    </ul>
+    <div class="shot-placeholder">צילום מסך — capture-needed
+      <span>חלון ההתקנה (גרירה ל-Applications)</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">3</div><h2>התחברות / יצירת חשבון</h2></div>
+    <p>בפעם הראשונה תתבקשו להתחבר. אפשר עם חשבון Google או עם אימייל.</p>
+    <ul>
+      <li>לחצו <b>Continue with Google</b> או הזינו אימייל</li>
+      <li>אשרו את הקוד שנשלח אליכם למייל</li>
+      <li>זהו — אתם בפנים</li>
+    </ul>
+    <div class="note">לא צריך כרטיס אשראי כדי להתחבר. אפשר להתחיל בחינם ולשדרג בהמשך.</div>
+    <div class="shot-placeholder">צילום מסך — capture-needed
+      <span>מסך ההתחברות (Continue with Google / אימייל)</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">4</div><h2>רכישת מנוי (מומלץ)</h2></div>
+    <p>המנוי בתשלום (<b>Pro</b>) פותח שימוש נרחב יותר, קבצים גדולים, ויכולות מתקדמות — שווה לבעל עסק שעובד עם זה ביומיום.</p>
+    <ul>
+      <li>בתוך האפליקציה לחצו על שמכם → <b>Settings</b> → <b>Billing / Plan</b></li>
+      <li>בחרו <b>Upgrade to Pro</b></li>
+      <li>הזינו פרטי תשלום ואשרו — המנוי נכנס לתוקף מיד</li>
+    </ul>
+    <div class="shot-placeholder">צילום מסך — capture-needed
+      <span>מסך השדרוג ל-Pro עם המחיר</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">5</div><h2>השיחה הראשונה</h2></div>
+    <p>פתחו שיחה חדשה ונסו את אחד הפרומפטים מחבילת התלמיד. למשל:</p>
+    <ul>
+      <li>"תכין לי טבלת מעקב לקוחות פשוטה"</li>
+      <li>"סכם לי את דף הבנק המצורף"</li>
+      <li>"כתוב לי פוסט לינקדאין על [נושא]"</li>
+    </ul>
+    <a class="cta" href="prompt-pack.md">← לכל הפרומפטים המוכנים</a>
+    <div class="shot-placeholder">צילום מסך — capture-needed
+      <span>חלון שיחה ראשון עם פרומפט מודגש</span></div>
+  </div>
+
+  <footer>
+    קורס <span class="num-ltr">Claude Desktop</span> · Tal Movshovitz ✕ Omri Katav
+  </footer>
+</div>
+</body>
+</html>

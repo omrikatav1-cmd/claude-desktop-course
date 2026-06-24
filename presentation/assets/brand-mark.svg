@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-label="סדנת Claude Code">
+  <defs>
+    <linearGradient id="bm-coral" x1="20" y1="16" x2="180" y2="184" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F0875F"/>
+      <stop offset="0.55" stop-color="#E8633A"/>
+      <stop offset="1" stop-color="#C24A26"/>
+    </linearGradient>
+  </defs>
+
+  <!-- coral badge -->
+  <rect x="16" y="16" width="168" height="168" rx="42" fill="url(#bm-coral)"/>
+  <rect x="16.75" y="16.75" width="166.5" height="166.5" rx="41.25" stroke="#fff" stroke-opacity="0.16" stroke-width="1.5"/>
+
+  <!-- primary caret, dark knockout -->
+  <path d="M 70 60 L 116 100 L 70 140" stroke="#0E0D0C" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- cursor underscore, gold -->
+  <rect x="78" y="150" width="50" height="11" rx="5.5" fill="#F2C14E"/>
+</svg>
