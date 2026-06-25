@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סדנת Claude Desktop — סילבוס | טל מובשוביץ ✕ עומרי כתב</title>
+<meta name="description" content="סדנה פרונטלית ל-Claude Desktop: Chat · Co-work · Code. עד סוף היום תפעילו סוכן AI שעובד בשבילכם ותצאו עם מוצר חי. טל מובשוביץ ✕ עומרי כתב.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0D0C; --bg-elev:#1A1816; --bg-elev-2:#242019; --line:#322C26;
+    --accent:#E8633A; --accent-soft:#F0875F; --accent-deep:#C24A26; --accent-2:#F2C14E;
+    --text:#F5EFE8; --text-dim:#B8AEA3; --text-faint:#7C736A;
+    --r-sm:10px; --r-md:16px; --r-lg:26px; --r-pill:999px;
+    --shadow-accent:0 18px 50px -12px rgba(232,99,58,.35);
+    --shadow-soft:0 12px 40px -16px rgba(0,0,0,.6);
+    --font-he:"Assistant",system-ui,sans-serif; --font-d:"Space Grotesk",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{direction:rtl;scroll-behavior:smooth}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text);line-height:1.65;
+    min-height:100vh;overflow-x:hidden;
+    background-image:radial-gradient(130% 70% at 88% -8%,rgba(232,99,58,.18),transparent 58%),
+                     radial-gradient(90% 50% at 5% 0%,rgba(242,193,78,.07),transparent 55%);
+    background-attachment:fixed}
+  .wrap{max-width:1040px;margin-inline:auto;padding:0 22px}
+  .latin{font-family:var(--font-d)}
+
+  ::selection{background:var(--accent);color:var(--bg)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--r-sm)}
+
+  /* HERO */
+  .hero{padding:96px 0 60px;text-align:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:.8rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--accent);border:1px solid var(--line);
+    border-radius:var(--r-pill);padding:7px 18px;margin-bottom:28px;background:rgba(26,24,22,.6)}
+  .caret{width:8px;height:16px;background:var(--accent);animation:blink 1.1s steps(2) infinite;border-radius:1px}
+  @keyframes blink{50%{opacity:0}}
+  h1{font-size:clamp(2.3rem,6.4vw,4.7rem);font-weight:800;line-height:1.06;letter-spacing:-.01em;
+    margin-bottom:20px;max-width:18ch;margin-inline:auto}
+  h1 .hl{color:var(--accent)}
+  .lede{color:var(--text-dim);font-size:clamp(1.05rem,2.3vw,1.32rem);max-width:56ch;margin-inline:auto}
+  .lede .latin{color:var(--text)}
+  .by{margin-top:32px;font-family:var(--font-d);font-size:1.05rem;color:var(--text-faint);letter-spacing:.04em}
+  .by b{color:var(--text)}
+  .by .x{color:var(--accent);margin:0 8px;font-weight:700}
+  .logistics{margin-top:18px;color:var(--text-dim);font-size:.98rem;display:inline-flex;flex-wrap:wrap;
+    justify-content:center;gap:6px 16px}
+  .logistics span{white-space:nowrap}
+
+  /* SECTION HEADINGS */
+  .section{padding:52px 0}
+  .section-label{font-family:var(--font-d);font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--text-faint);margin-bottom:10px}
+  h2{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;line-height:1.12;letter-spacing:-.01em;margin-bottom:34px}
+  h2 .hl{color:var(--accent)}
+  .h2-sub{color:var(--text-dim);font-size:1.05rem;margin-top:-22px;margin-bottom:34px;max-width:60ch}
+
+  /* TWO-MEETING CARDS */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  .mcard{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:34px 30px;position:relative;overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .mcard:hover{transform:translateY(-4px);border-color:var(--accent-deep);box-shadow:var(--shadow-accent)}
+  .mcard.primary{background:linear-gradient(160deg,#221710,var(--bg-elev));border-color:var(--accent-deep)}
+  .kicker{display:inline-block;font-family:var(--font-d);font-size:.72rem;letter-spacing:.08em;
+    color:var(--accent);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 13px;margin-bottom:18px}
+  .mcard h3{font-size:1.5rem;font-weight:700;margin-bottom:12px}
+  .mcard p{color:var(--text-dim);font-size:1.02rem}
+  .pull{margin-top:20px;padding-inline-start:16px;border-inline-start:3px solid var(--accent);
+    color:var(--text);font-size:1.02rem;font-weight:500;line-height:1.55}
+
+  /* OUTCOMES GRID */
+  .grid-out{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .ocard{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:26px 24px;transition:transform .18s ease,border-color .18s ease}
+  .ocard:hover{transform:translateY(-3px);border-color:var(--accent-deep)}
+  .ocard .ic{color:var(--accent);margin-bottom:16px;display:block}
+  .ocard p{color:var(--text-dim);font-size:1.02rem;line-height:1.55}
+  .ocard p b{color:var(--text);font-weight:700}
+  .ocard.span2{grid-column:span 2}
+
+  /* TIMELINE */
+  .timeline{position:relative;margin-top:8px}
+  .timeline::before{content:"";position:absolute;inset-inline-start:84px;top:6px;bottom:6px;
+    width:2px;background:linear-gradient(var(--accent-deep),var(--line));opacity:.7}
+  .trow{display:grid;grid-template-columns:78px 1fr;gap:20px;position:relative;padding:14px 0}
+  .ttime{font-family:var(--font-d);font-size:.92rem;color:var(--accent-2);text-align:start;padding-top:2px;
+    white-space:nowrap;letter-spacing:.01em}
+  .tbody{position:relative;padding-inline-start:30px}
+  .tbody::before{content:"";position:absolute;inset-inline-start:-2px;top:9px;width:11px;height:11px;
+    border-radius:50%;background:var(--bg);border:2px solid var(--accent);transform:translateX(50%)}
+  .trow.core .tbody::before{background:var(--accent);box-shadow:0 0 0 4px rgba(232,99,58,.18)}
+  .tbody h4{font-size:1.08rem;font-weight:700;line-height:1.4}
+  .tbody .desc{color:var(--text-dim);font-size:.96rem;margin-top:3px}
+  .live{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-d);font-size:.62rem;
+    letter-spacing:.1em;color:var(--accent);border:1px solid var(--accent-deep);border-radius:var(--r-pill);
+    padding:2px 9px;margin-inline-start:10px;vertical-align:middle;text-transform:uppercase}
+  .live .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 1.1s steps(2) infinite}
+
+  /* AGENTS GRID */
+  .grid-ag{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .agcard{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:26px 24px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+  .agcard:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow-accent)}
+  .agcard .ic{color:var(--accent);margin-bottom:15px;display:block}
+  .agcard h4{font-size:1.12rem;font-weight:700;margin-bottom:7px}
+  .agcard p{color:var(--text-dim);font-size:.97rem;line-height:1.5}
+
+  /* BONUS BLOCK */
+  .bonus{background:linear-gradient(160deg,#221710,var(--bg-elev));border:1px solid var(--accent-deep);
+    border-radius:var(--r-lg);padding:36px 32px}
+  .bonus ul{list-style:none;display:flex;flex-wrap:wrap;gap:12px}
+  .bonus li{display:flex;align-items:center;gap:10px;background:rgba(14,13,12,.45);border:1px solid var(--line);
+    border-radius:var(--r-pill);padding:10px 18px;font-size:1rem;color:var(--text)}
+  .bonus li svg{color:var(--accent);flex:none}
+  .bonus li .latin{color:var(--text)}
+
+  /* CTA */
+  .cta{text-align:center;padding:80px 0 56px}
+  .cta h2{margin-bottom:24px}
+  .btn{display:inline-block;font-family:var(--font-d);font-weight:700;font-size:1.15rem;letter-spacing:.02em;
+    background:var(--accent);color:var(--bg);text-decoration:none;border-radius:var(--r-pill);
+    padding:17px 52px;box-shadow:var(--shadow-accent);transition:background .18s ease,transform .18s ease}
+  .btn:hover{background:var(--accent-soft);transform:translateY(-2px)}
+  .cta .fine{margin-top:16px;color:var(--text-faint);font-size:.92rem}
+
+  footer{text-align:center;color:var(--text-faint);font-size:.9rem;padding:46px 0 64px;
+    border-top:1px solid var(--line)}
+  footer .x{color:var(--accent);margin:0 6px}
+  footer b{color:var(--text-dim)}
+
+  /* SCROLL REVEAL — only hidden when JS is active, so content never stays invisible without JS */
+  .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .js .reveal{opacity:1;transform:none;transition:none}
+    .caret,.live .dot{animation:none}
+    html{scroll-behavior:auto}
+  }
+
+  /* RESPONSIVE */
+  @media(max-width:860px){
+    .grid-out,.grid-ag{grid-template-columns:repeat(2,1fr)}
+    .ocard.span2{grid-column:auto}
+  }
+  @media(max-width:640px){
+    .hero{padding:66px 0 44px}
+    .section{padding:42px 0}
+    .grid-2,.grid-out,.grid-ag{grid-template-columns:1fr}
+    .timeline::before{inset-inline-start:0}
+    .trow{grid-template-columns:1fr;gap:4px;padding:12px 0 12px 0}
+    .ttime{padding-inline-start:24px}
+    .tbody{padding-inline-start:24px}
+    .tbody::before{inset-inline-start:0;transform:none}
+    .bonus{padding:28px 22px}
+    .btn{padding:16px 40px;width:100%;max-width:340px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 1. HERO -->
+  <header class="hero">
+    <span class="eyebrow"><span class="caret"></span> סדנה פרונטלית · <span class="latin">Claude Desktop</span></span>
+    <h1>איך לחסוך <span class="hl">20–40 שעות בחודש</span> בעזרת סוכני בינה מלאכותית</h1>
+    <p class="lede"><span class="latin">Claude Desktop</span> — <span class="latin">Chat</span> · <span class="latin">Co-work</span> · <span class="latin">Code</span>. עד סוף היום תדעו להפעיל סוכן <span class="latin">AI</span> שעובד בשבילכם — ותצאו עם מוצר חי שבניתם בעצמכם.</p>
+    <p class="by"><b>טל מובשוביץ</b> <span class="x">✕</span> <b>עומרי כתב</b></p>
+    <p class="logistics">
+      <span>📅 [תאריך]</span>
+      <span>📍 [מיקום]</span>
+      <span>🕝 <span class="latin">16:30–20:00</span></span>
+    </p>
+  </header>
+
+  <!-- 2. HOW IT WORKS -->
+  <section class="section">
+    <div class="reveal">
+      <p class="section-label">איך זה עובד</p>
+      <h2>שני מפגשים</h2>
+    </div>
+    <div class="grid-2">
+      <article class="mcard reveal">
+        <span class="kicker">שלב 1 · לפני הסדנה</span>
+        <h3>מפגש הכנה בזום</h3>
+        <p>מסדירים מראש את כל החלק הטכני והבירוקרטי — התקנת <span class="latin">Claude Desktop</span> (<span class="latin">Mac/Windows</span>), רכישת מנוי, התחברות ובדיקת תקינות, ומה להביא.</p>
+        <p class="pull">את כל ההכנות והחלק הידני מסיימים מראש — כדי שב-3 שעות הסדנה נעסוק אך ורק בפרקטיקה.</p>
+      </article>
+      <article class="mcard primary reveal">
+        <span class="kicker">שלב 2 · הסדנה</span>
+        <h3>המפגש הפרונטלי</h3>
+        <p><span class="latin">16:30</span> התכנסות ומינגלינג, <span class="latin">17:00</span> צוללים לעבודה. שלוש שעות מעשיות, מ-א' עד ת' — בונים, מריצים, יוצאים עם תוצרים חיים.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 3. OUTCOMES -->
+  <section class="section">
+    <div class="reveal">
+      <p class="section-label">התוצאה</p>
+      <h2>מה תצאו <span class="hl">איתו</span></h2>
+    </div>
+    <div class="grid-out">
+      <article class="ocard reveal">
+        <svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <p>המודל המנטלי שמשנה הכול: צ'אט <b>מדבר</b>, <span class="latin">Claude</span> <b>עושה</b>.</p>
+      </article>
+      <article class="ocard reveal">
+        <svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9"/><path d="M21 12a9 9 0 0 1-9 9"/><path d="m8 9 4-4 4 4"/><path d="M12 5v9"/></svg>
+        <p>בהירות מלאה: מתי להשתמש ב-<span class="latin">Chat</span>, מתי ב-<span class="latin">Co-work</span>, ומתי ב-<span class="latin">Code</span>.</p>
+      </article>
+      <article class="ocard reveal">
+        <svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5"/><path d="M12 22V12"/></svg>
+        <p>מוצר חי / <span class="latin">MVP</span> ראשון שבניתם בעצמכם בתוך הסדנה.</p>
+      </article>
+      <article class="ocard reveal">
+        <svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/><path d="M8 21h8"/></svg>
+        <p>סוכנים ואוטומציות שעובדים בשבילכם — מיילים, יומן, <span class="latin">WhatsApp</span>.</p>
+      </article>
+      <article class="ocard span2 reveal">
+        <svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        <p>חבילת <b>30 סקילים</b> מוכנים לעסק שלכם.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 4. TIMELINE -->
+  <section class="section">
+    <div class="reveal">
+      <p class="section-label">לוח הזמנים</p>
+      <h2><span class="latin">17:00–20:00</span> — שלוש שעות נטו</h2>
+    </div>
+    <div class="timeline reveal">
+      <div class="trow">
+        <div class="ttime">16:30–17:00</div>
+        <div class="tbody"><h4>התכנסות, מינגלינג וזמן הגעה</h4></div>
+      </div>
+      <div class="trow">
+        <div class="ttime">17:00–17:15</div>
+        <div class="tbody"><h4>פתיחה ומסגור</h4><p class="desc">ארבעת המשטחים: <span class="latin">Chat → Co-work → Code</span> + נגיעת <span class="latin">Design</span>.</p></div>
+      </div>
+      <div class="trow">
+        <div class="ttime">17:15–17:40</div>
+        <div class="tbody"><h4><span class="latin">Chat</span> — העוזר החכם <span class="live"><span class="dot"></span>LIVE</span></h4><p class="desc">כולל דמו חי.</p></div>
+      </div>
+      <div class="trow">
+        <div class="ttime">17:40–18:05</div>
+        <div class="tbody"><h4><span class="latin">Co-work</span> — מבצע משימות על הקבצים שלכם <span class="live"><span class="dot"></span>LIVE</span></h4><p class="desc">כולל דמו חי.</p></div>
+      </div>
+      <div class="trow core">
+        <div class="ttime">18:05–18:50</div>
+        <div class="tbody"><h4><span class="latin">Code</span> — הליבה</h4><p class="desc"><span class="latin">Plan Mode</span>, חיבור כלים (<span class="latin">Connectors/MCP</span>), <span class="latin">Hooks</span>, בחירת מודל, ובטיחות.</p></div>
+      </div>
+      <div class="trow">
+        <div class="ttime">18:50–19:20</div>
+        <div class="tbody"><h4>הפרויקט שלכם: בונים <span class="latin">MVP</span> חי</h4><p class="desc">הפסקה של 15 דק' בזמן שהסוכן עובד.</p></div>
+      </div>
+      <div class="trow">
+        <div class="ttime">19:20–19:50</div>
+        <div class="tbody"><h4>סוכנים ואוטומציות שרצות לבד</h4></div>
+      </div>
+      <div class="trow">
+        <div class="ttime">19:50–20:00</div>
+        <div class="tbody"><h4>נגיעת <span class="latin">Design</span>, סיכום וחבילת הבונוס</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. AGENTS & AUTOMATIONS -->
+  <section class="section">
+    <div class="reveal">
+      <p class="section-label">הליבה</p>
+      <h2>סוכנים ואוטומציות שעובדים <span class="hl">בשבילכם</span></h2>
+      <p class="h2-sub">מגדירים פעם אחת — רץ לתמיד. לוקאלי כשהמחשב דולק, או בענן גם כשהוא כבוי.</p>
+    </div>
+    <div class="grid-ag">
+      <article class="agcard reveal">
+        <svg class="ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        <h4>סוכן מיילים</h4>
+        <p>סורק את כל המיילים של 24 השעות האחרונות ומגיש לכם סיכום ממוקד בכל בוקר.</p>
+      </article>
+      <article class="agcard reveal">
+        <svg class="ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="m9 15 2 2 4-4"/></svg>
+        <h4>סוכן יומן</h4>
+        <p>מתממשק ליומן שלכם, שולח תזכורות וקובע לכם משימות אוטומטית.</p>
+      </article>
+      <article class="agcard reveal">
+        <svg class="ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+        <h4><span class="latin">WhatsApp</span> אוטומטי</h4>
+        <p>תזכורת או פולואפ ללקוח, נשלח לבד בזמן הנכון.</p>
+      </article>
+      <article class="agcard reveal">
+        <svg class="ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+        <h4>בריפינג בוקר</h4>
+        <p>יומן + משימות + לידים, מסוכמים ומגיעים אליכם בלי לבקש.</p>
+      </article>
+      <article class="agcard reveal">
+        <svg class="ic" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M8 13l3 3 5-6M8 7h8"/></svg>
+        <h4>דוח שבועי</h4>
+        <p>סקירה עסקית שמופקת ונשלחת פעם בשבוע.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 6. BONUS PACK -->
+  <section class="section">
+    <div class="reveal">
+      <p class="section-label">חבילת בונוס</p>
+      <h2>מה לוקחים <span class="hl">הביתה</span></h2>
+    </div>
+    <div class="bonus reveal">
+      <ul>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-11"/></svg> <span><b>30</b> סקילים מוכנים <span style="color:var(--text-dim)">(שיווק/תוכן + פיננסים/אדמין)</span></span></li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-11"/></svg> <span>3 אוטומציות (<span class="latin">Routines</span>)</span></li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-11"/></svg> <span>חבילת פונטים</span></li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-11"/></svg> <span class="latin">Prompt Pack</span></li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-11"/></svg> <span class="latin">NotebookLM</span></li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-11"/></svg> <span>מדריך התקנה</span></li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg> <span>הכול בלינק אחד</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7. CTA -->
+  <section class="cta">
+    <div class="reveal">
+      <h2>שמרו את המקום שלכם</h2>
+      <a class="btn" href="#">להרשמה</a>
+      <p class="fine">מספר המקומות מוגבל.</p>
+    </div>
+  </section>
+
+  <footer>
+    <b>טל מובשוביץ</b> <span class="x">✕</span> <b>עומרי כתב</b>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    document.documentElement.classList.add('js');
+    var els = document.querySelectorAll('.reveal');
+    function revealAll(){els.forEach(function(e){e.classList.add('in')})}
+    if(!('IntersectionObserver' in window)){revealAll();return;}
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}
+      });
+    },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(e){io.observe(e)});
+    // Safety net: reveal anything the observer hasn't caught shortly after load
+    // (fast scroll, restored scroll position, no scroll at all) so content is never lost.
+    window.addEventListener('load',function(){
+      setTimeout(function(){
+        els.forEach(function(e){
+          if(!e.classList.contains('in')){e.classList.add('in');io.unobserve(e);}
+        });
+      },1400);
+    });
+  })();
+</script>
+</body>
+</html>
