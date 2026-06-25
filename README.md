@@ -12,7 +12,8 @@
 | 🎞️ **המצגת** | [`presentation/index.html`](presentation/index.html) — 29 שקופיות, reveal.js, RTL. מקש `S` לפתיחת הערות הדובר. |
 | 🧩 **30 סקילים** | [`skills/`](skills/) — 15 בחבילת עומרי (שיווק/תוכן/לקוחות) + 15 בחבילת טל (פיננסים/אדמין/אופרציה). |
 | 🔤 **פונטים** | [`fonts/`](fonts/) — מערכת הפונטים של המותג, מוכנה לשימוש. |
-| 🎁 **בונוסים** | [`bonuses/`](bonuses/) — Prompt Pack, מדריך התקנה, סקילים מומלצים. |
+| ⚙️ **3 Routines** | [`bonuses/routines-pack.md`](bonuses/routines-pack.md) — WhatsApp/GREEN-API, בריפינג בוקר, דוח שבועי. |
+| 🎁 **בונוסים** | [`bonuses/`](bonuses/) — Prompt Pack (סופי), NotebookLM, סקילים מומלצים, מדריך התקנה. |
 
 ## איך פותחים
 
